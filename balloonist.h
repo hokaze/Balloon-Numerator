@@ -10,8 +10,8 @@ namespace PPM
 	{
 		private:
 			// Example values - currently don't do anything
-			const int run_speed = 2, float_speed = 1;
-			const float fall_accel = 0.1, ascend_accel = 0.05;
+			//const int run_speed = 2, float_speed = 1;
+			//const float fall_accel = 0.1, ascend_accel = 0.05;
 			// Possible variables to keep track of
 			int balloons, x_pos, y_pos, score, lives;
 			float x_speed, y_speed;

@@ -4,14 +4,14 @@ namespace PPM
 {
 	Balloonist::Balloonist(SDL_Renderer *r)
 	{
-		x_pos = 0;
-		y_pos = 0;
+		x_pos = 50;
+		y_pos = 50;
 		balloons = 3;
 		lives = 3;
 		score = 0;
 		grounded = false;
 		alive = true;
-		SDL_Texture *sprite = loadTexture("balloonist.png", r);
+		sprite = loadTexture("balloonist.png", r);
 	}
 	
 	Balloonist::Balloonist(int x, int y, int starting_balloons, int starting_lives, std::string image_file, SDL_Renderer *r)

@@ -8,7 +8,7 @@ using namespace PPM;
 const int SCREEN_WIDTH = 640;
 const int SCREEN_HEIGHT = 480;
 
-int main()
+int main(int argc, char*argv[])
 {
 	// Initialise SDL video, event, audio, timer, joystick, controller, etc subsystems
 	SDL_Init(SDL_INIT_EVERYTHING);
