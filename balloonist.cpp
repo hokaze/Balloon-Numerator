@@ -41,11 +41,29 @@ namespace PPM
 			case SDLK_LEFT: x_pos -= 5; break;
 			case SDLK_RIGHT: x_pos += 5; break;
 		}
+		
+		// Horizontal screen-wrap
+		if (x_pos < -30) {x_pos = 610;}
+		else if (x_pos > 610) {x_pos = -30;}
+		
+		// Vertical screen-bounds
+		if (y_pos < 0) {y_pos = 0;}
+		else if (y_pos > 390) {y_pos = 390;}
 	}
 	
 	void Balloonist::update(SDL_Renderer *r)
 	{
 		// Draw to screen
 		renderTexture(sprite, r, x_pos, y_pos);
+		
+		// Make horizontal screen-wrap render on both sides of screen
+		if (x_pos < 0)
+		{
+			renderTexture(sprite, r, x_pos + 640, y_pos);
+		}
+		else if (x_pos > 580)
+		{
+			renderTexture(sprite, r, x_pos - 640, y_pos);
+		}
 	}
 }
