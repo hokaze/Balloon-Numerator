@@ -1,12 +1,11 @@
-#ifndef PPM__BALLOONIST
-#define PPM__BALLOONIST
+#ifndef PPM__ENEMY1
+#define PPM__ENEMY1
 
-#include "common.h"
 #include "gfx.h"
 
 namespace PPM
 {
-	class Balloonist
+	class Enemy1
 	{
 		private:
 			// Example values - currently don't do anything
@@ -20,16 +19,12 @@ namespace PPM
 			//SDL_Rect collisionBox; // restore this when collision works properly
 		public:
 			SDL_Rect collisionBox; // placed in public temporarily to test collision
-			Balloonist(SDL_Renderer *r);
-			Balloonist(int x, int y, int starting_balloons, int starting_lives, std::string image_file, SDL_Renderer *r);
-			~Balloonist();
+			Enemy1(SDL_Renderer *r);
+			~Enemy1();
 			//void move(bool direction); // final move is just left/right
 			void move(SDL_Event event); // prototype move is up/down/left/right
 			void fall();
 			void flap();
-			void collisions();
-			//void kick(Enemy foe); // No "enemy" class exists yet
-			//void stomp(Enemy foe);
 			void update(SDL_Renderer *r);
 	};
 }

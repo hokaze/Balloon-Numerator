@@ -1,6 +1,8 @@
 // Balloon game demo code
 
 #include "balloonist.h"
+#include "enemy.h"
+#include <iostream> // DEBUG
 using namespace std;
 using namespace PPM;
 
@@ -23,8 +25,9 @@ int main(int argc, char*argv[])
 	SDL_Event event;
 	bool running = true;
 	
-	// Create our player
+	// Create our player and a sample enemy
 	Balloonist player(rend);
+	Enemy1 foe(rend);
 	
 	while (running)
 	{
@@ -44,7 +47,15 @@ int main(int argc, char*argv[])
 		SDL_RenderClear(rend);
 		renderTexture(bgTex, rend, 0, 0);
 		player.update(rend);
+		foe.update(rend);
 		SDL_RenderPresent(rend);
+		
+		// DEBUG - check collisions
+		bool collide = checkCollision(player.collisionBox, foe.collisionBox);
+		if (collide)
+		{
+			cout << "Player overlap with Enemy1" << endl;
+		}
 	}
 	
 	// Clean up objects and safely close SDL

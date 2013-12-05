@@ -38,4 +38,47 @@ namespace PPM
 		position.h = h;
 		SDL_RenderCopy(renderer, tex, NULL, &position);
 	}
+	
+	// SDL_Rect based collision checking. 0 = no collide. 1 = a overlaps left of b.
+	// 2 = a overlaps top of b. 3 = a overlaps right of b. 4 = a overlaps bottom of b.
+	bool checkCollision(SDL_Rect a, SDL_Rect b)
+	{
+		// Sides of the rectangles
+		int left_a, right_a, top_a, bottom_a;
+		int left_b, right_b, top_b, bottom_b;
+		
+		left_a = a.x;
+		right_a = a.x + a.w;
+		top_a = a.y;
+		bottom_a = a.y + a.h;
+		
+		left_b = b.x;
+		right_b = b.x + b.w;
+		top_b = b.y;
+		bottom_b = b.y + b.h;
+		
+		// Checks for A overlapping with B
+		if (bottom_a <= top_b)
+		{
+			return false;
+		}
+
+		if (top_a >= bottom_b)
+		{
+			return false;
+		}
+
+		if (right_a <= left_b)
+		{
+			return false;
+		}
+
+		if (left_a >= right_b)
+		{
+			return false;
+		}
+
+		// If none of the sides from A are outside B
+		return true;
+	}
 }
