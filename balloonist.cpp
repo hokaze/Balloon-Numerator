@@ -4,26 +4,30 @@ namespace PPM
 {
 	Balloonist::Balloonist(SDL_Renderer *r)
 	{
-		x_pos = 50;
-		y_pos = 50;
+		collisionBox.x = 50;
+		collisionBox.y = 50;
 		balloons = 3;
 		lives = 3;
 		score = 0;
 		grounded = false;
 		alive = true;
+		facingRight = true;
 		sprite = loadTexture("balloonist.png", r);
+		collisionBox.w = SDL_QueryTexture(sprite, NULL, NULL, &collisionBox.w, &collisionBox.h);
 	}
 	
 	Balloonist::Balloonist(int x, int y, int starting_balloons, int starting_lives, std::string image_file, SDL_Renderer *r)
 	{
-		x_pos = x;
-		y_pos = y;
+		collisionBox.x = 50;
+		collisionBox.y = 50;
 		balloons = starting_balloons;
 		lives = starting_lives;
 		score = 0;
 		grounded = true;
 		alive = true;
+		facingRight = true;
 		SDL_Texture *charTex = loadTexture(image_file, r);
+		collisionBox.w = SDL_QueryTexture(sprite, NULL, NULL, &collisionBox.w, &collisionBox.h);
 	}
 	
 	Balloonist::~Balloonist()
@@ -36,34 +40,34 @@ namespace PPM
 		// Primitive movement
 		switch(event.key.keysym.sym)
 		{
-			case SDLK_UP: y_pos -= 5; break;
-			case SDLK_DOWN: y_pos += 5; break;
-			case SDLK_LEFT: x_pos -= 5; break;
-			case SDLK_RIGHT: x_pos += 5; break;
+			case SDLK_UP: collisionBox.y -= 5; break;
+			case SDLK_DOWN: collisionBox.y += 5; break;
+			case SDLK_LEFT: collisionBox.x -= 5; facingRight = false; break;
+			case SDLK_RIGHT: collisionBox.x += 5; facingRight = true; break;
 		}
 		
 		// Horizontal screen-wrap
-		if (x_pos < -30) {x_pos = 610;}
-		else if (x_pos > 610) {x_pos = -30;}
+		if (collisionBox.x < -30) {collisionBox.x = 610;}
+		else if (collisionBox.x > 610) {collisionBox.x = -30;}
 		
 		// Vertical screen-bounds
-		if (y_pos < 0) {y_pos = 0;}
-		else if (y_pos > 390) {y_pos = 390;}
+		if (collisionBox.y < 0) {collisionBox.y = 0;}
+		else if (collisionBox.y > 390) {collisionBox.y = 390;}
 	}
 	
 	void Balloonist::update(SDL_Renderer *r)
 	{
 		// Draw to screen
-		renderTexture(sprite, r, x_pos, y_pos);
+		renderTexture(sprite, r, collisionBox.x, collisionBox.y, facingRight);
 		
 		// Make horizontal screen-wrap render on both sides of screen
-		if (x_pos < 0)
+		if (collisionBox.x < 0)
 		{
-			renderTexture(sprite, r, x_pos + 640, y_pos);
+			renderTexture(sprite, r, collisionBox.x + 640, collisionBox.y, facingRight);
 		}
-		else if (x_pos > 580)
+		else if (collisionBox.x > 580)
 		{
-			renderTexture(sprite, r, x_pos - 640, y_pos);
+			renderTexture(sprite, r, collisionBox.x - 640, collisionBox.y, facingRight);
 		}
 	}
 }

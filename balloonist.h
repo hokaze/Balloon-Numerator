@@ -15,8 +15,9 @@ namespace PPM
 			// Possible variables to keep track of
 			int balloons, x_pos, y_pos, score, lives;
 			float x_speed, y_speed;
-			bool alive, grounded;
+			bool alive, grounded, facingRight;
 			SDL_Texture *sprite;
+			SDL_Rect collisionBox;
 		public:
 			Balloonist(SDL_Renderer *r);
 			Balloonist(int x, int y, int starting_balloons, int starting_lives, std::string image_file, SDL_Renderer *r);

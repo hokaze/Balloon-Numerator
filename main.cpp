@@ -1,5 +1,4 @@
 // Balloon game demo code
-// r002 - Starting with SDL 2.0
 
 #include "balloonist.h"
 using namespace std;

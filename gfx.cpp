@@ -9,8 +9,8 @@ namespace PPM
 		return texture;
 	}
 
-	// Non-stretch, original size rendering at position (x, y)
-	void renderTexture(SDL_Texture *tex, SDL_Renderer *renderer, int x, int y)
+	// Non-stretch, original size rendering at position (x, y), whether flipped or not
+	void renderTexture(SDL_Texture *tex, SDL_Renderer *renderer, int x, int y, bool facingRight)
 	{
 		// Destination rectangle of our desired position to render to
 		SDL_Rect position;
@@ -18,7 +18,14 @@ namespace PPM
 		position.y = y;
 		// Check texture for original width and height, use those instead of stretching upon render
 		SDL_QueryTexture(tex, NULL, NULL, &position.w, &position.h);
-		SDL_RenderCopy(renderer, tex, NULL, &position);
+		if (facingRight)
+		{
+			SDL_RenderCopy(renderer, tex, NULL, &position);
+		}
+		else
+		{
+			SDL_RenderCopyEx(renderer, tex, NULL, &position, 0, NULL, SDL_FLIP_HORIZONTAL);
+		}
 	}
 
 	// Stretches to size specified by width (w) and height (h) at position (x, y)
