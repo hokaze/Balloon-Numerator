@@ -6,6 +6,8 @@ namespace PPM
 	{
 		collisionBox.x = 50;
 		collisionBox.y = 50;
+		x_speed = 0;
+		y_speed = 0.01;
 		balloons = 3;
 		lives = 3;
 		score = 0;
@@ -44,9 +46,9 @@ namespace PPM
 			switch(event.key.keysym.sym)
 			{
 				case SDLK_UP: y_speed = -4; break;
-				case SDLK_DOWN: y_speed = 4; break;
-				case SDLK_LEFT: x_speed = -4; facingRight = false; break;
-				case SDLK_RIGHT: x_speed = 4; facingRight = true; break;
+				//case SDLK_DOWN: y_speed = 4; break;
+				case SDLK_LEFT: x_speed -= 4; facingRight = false; break;
+				case SDLK_RIGHT: x_speed += 4; facingRight = true; break;
 			}
 		}
 		if (event.type == SDL_KEYUP)
@@ -54,16 +56,28 @@ namespace PPM
 			// Negate velocity
 			switch(event.key.keysym.sym)
 			{
-				case SDLK_UP: y_speed += 4; break;
-				case SDLK_DOWN: y_speed -= 4; break;
-				case SDLK_LEFT: x_speed += 4; break;
-				case SDLK_RIGHT: x_speed -= 4; break;
+				case SDLK_UP: y_speed += 2; break;
+				//case SDLK_DOWN: y_speed -= 3; break;
+				case SDLK_LEFT: x_speed += 3; break;
+				case SDLK_RIGHT: x_speed -= 3; break;
 			}
 		}
 	}
 	
 	void Balloonist::update(SDL_Renderer *r)
 	{
+		// Gravity
+		if (!grounded)
+		{
+			y_speed += 0.05;
+		}
+		
+		// Cap speeds
+		if (x_speed > 4) {x_speed = 4;}
+		else if (x_speed < -4) {x_speed = -4;}
+		if (y_speed > 4) {y_speed = 4;}
+		else if (y_speed < -4) {y_speed = -4;}
+		
 		// Update position
 		collisionBox.x += x_speed;
 		collisionBox.y += y_speed;
@@ -73,7 +87,7 @@ namespace PPM
 		else if (collisionBox.x > 610) {collisionBox.x = -30;}
 		
 		// Vertical screen-bounds
-		if (collisionBox.y < 0) {collisionBox.y = 0;}
+		if (collisionBox.y < 0) {collisionBox.y = 0; y_speed = 0;}
 		else if (collisionBox.y > 390) {collisionBox.y = 390;}
 		
 		// Draw to screen
