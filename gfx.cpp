@@ -39,9 +39,9 @@ namespace PPM
 		SDL_RenderCopy(renderer, tex, NULL, &position);
 	}
 	
-	// SDL_Rect based collision checking. 0 = no collide. 1 = a overlaps left of b.
-	// 2 = a overlaps top of b. 3 = a overlaps right of b. 4 = a overlaps bottom of b.
-	bool checkCollision(SDL_Rect a, SDL_Rect b)
+	// SDL_Rect based collision checking. 0 = No collision detected.
+	// 1 = A is LEFT of B. 2 = A is RIGHT of B. 3 = A is BELOW B. 4 = A is ABOVE B.
+	int checkCollision(SDL_Rect a, SDL_Rect b)
 	{
 		// Sides of the rectangles
 		int left_a, right_a, top_a, bottom_a;
@@ -56,6 +56,14 @@ namespace PPM
 		right_b = b.x + b.w;
 		top_b = b.y;
 		bottom_b = b.y + b.h;
+		
+		// Centre points, needed for direction checking
+		int centre_a_x, centre_a_y, centre_b_x, centre_b_y;
+		
+		centre_a_x = a.x + (0.5 * a.w);
+		centre_a_y = a.y + (0.5 * a.h);
+		centre_b_x = b.x + (0.5 * b.w);
+		centre_b_y = b.y + (0.5 * b.h);
 		
 		// Checks for A overlapping with B
 		if (bottom_a <= top_b)
@@ -77,8 +85,29 @@ namespace PPM
 		{
 			return false;
 		}
-
-		// If none of the sides from A are outside B
-		return true;
+		
+		// Direction of collision - EXPERIMENTAL
+		// Determine angle of line joining centre of A and B with x-axis
+		float angle = atan2(centre_a_y - centre_b_y, centre_a_x - centre_b_x);
+		angle = angle * (180 / 3.14); // convert to degrees, roughly
+		
+		std::cout << "ANGLE = " << angle << std::endl; // DEBUG
+		
+		if (angle > -45 && angle < 45)
+		{
+			return 2; // A is to the RIGHT of B
+		}
+		else if (angle <= 135 && angle >= 45)
+		{
+			return 3; // A is BELOW B
+		}
+		else if (angle >= -135 && angle <= -45)
+		{
+			return 4; // A is ABOVE B
+		}
+		else
+		{
+			return 1; // A is to the LEFT of B
+		}
 	}
 }

@@ -2,7 +2,7 @@
 
 #include "balloonist.h"
 #include "enemy.h"
-#include <iostream> // DEBUG
+//#include <iostream> // DEBUG
 using namespace std;
 using namespace PPM;
 
@@ -53,10 +53,26 @@ int main(int argc, char*argv[])
 		SDL_RenderPresent(rend);
 		
 		// DEBUG - check collisions
-		bool collide = checkCollision(player.collisionBox, foe.collisionBox);
+		int collide = checkCollision(player.collisionBox, foe.collisionBox);
 		if (collide)
 		{
-			cout << "Player overlap with Enemy1" << endl;
+			cout << "Collision: ";
+			if (collide == 1)
+			{
+				cout << " LEFT" << endl;
+			}
+			else if (collide == 2)
+			{
+				cout << " RIGHT" << endl;
+			}
+			else if (collide == 3)
+			{
+				cout << " BELOW" << endl;
+			}
+			else
+			{
+				cout << " ABOVE" << endl;
+			}
 		}
 	}
 	
