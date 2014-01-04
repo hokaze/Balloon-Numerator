@@ -29,6 +29,8 @@ int main(int argc, char*argv[])
 	Balloonist player(rend);
 	Enemy1 foe(rend);
 	
+	cout << "Running..." << endl;
+	
 	while (running)
 	{
 		while (SDL_PollEvent(&event))

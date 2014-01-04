@@ -13,7 +13,7 @@ namespace PPM
 		alive = true;
 		facingRight = true;
 		sprite = loadTexture("balloonist.png", r);
-		collisionBox.w = SDL_QueryTexture(sprite, NULL, NULL, &collisionBox.w, &collisionBox.h);
+		SDL_QueryTexture(sprite, NULL, NULL, &collisionBox.w, &collisionBox.h);
 	}
 	
 	Balloonist::Balloonist(int x, int y, int starting_balloons, int starting_lives, std::string image_file, SDL_Renderer *r)

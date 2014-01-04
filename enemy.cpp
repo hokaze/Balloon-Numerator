@@ -11,7 +11,7 @@ namespace PPM
 		alive = true;
 		facingRight = false;
 		sprite = loadTexture("enemy1.png", r);
-		collisionBox.w = SDL_QueryTexture(sprite, NULL, NULL, &collisionBox.w, &collisionBox.h);
+		SDL_QueryTexture(sprite, NULL, NULL, &collisionBox.w, &collisionBox.h);
 	}
 	
 	Enemy1::~Enemy1()
