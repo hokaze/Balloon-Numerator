@@ -37,14 +37,36 @@ namespace PPM
 	
 	void Balloonist::move(SDL_Event event)
 	{
-		// Primitive movement
-		switch(event.key.keysym.sym)
+		// Smoother movement by using velocities instead of adjusting X and Y directly
+		if (event.type == SDL_KEYDOWN)
 		{
-			case SDLK_UP: collisionBox.y -= 5; break;
-			case SDLK_DOWN: collisionBox.y += 5; break;
-			case SDLK_LEFT: collisionBox.x -= 5; facingRight = false; break;
-			case SDLK_RIGHT: collisionBox.x += 5; facingRight = true; break;
+			// Increment velocity
+			switch(event.key.keysym.sym)
+			{
+				case SDLK_UP: y_speed = -4; break;
+				case SDLK_DOWN: y_speed = 4; break;
+				case SDLK_LEFT: x_speed = -4; facingRight = false; break;
+				case SDLK_RIGHT: x_speed = 4; facingRight = true; break;
+			}
 		}
+		if (event.type == SDL_KEYUP)
+		{
+			// Negate velocity
+			switch(event.key.keysym.sym)
+			{
+				case SDLK_UP: y_speed += 4; break;
+				case SDLK_DOWN: y_speed -= 4; break;
+				case SDLK_LEFT: x_speed += 4; break;
+				case SDLK_RIGHT: x_speed -= 4; break;
+			}
+		}
+	}
+	
+	void Balloonist::update(SDL_Renderer *r)
+	{
+		// Update position
+		collisionBox.x += x_speed;
+		collisionBox.y += y_speed;
 		
 		// Horizontal screen-wrap
 		if (collisionBox.x < -30) {collisionBox.x = 610;}
@@ -53,10 +75,7 @@ namespace PPM
 		// Vertical screen-bounds
 		if (collisionBox.y < 0) {collisionBox.y = 0;}
 		else if (collisionBox.y > 390) {collisionBox.y = 390;}
-	}
-	
-	void Balloonist::update(SDL_Renderer *r)
-	{
+		
 		// Draw to screen
 		renderTexture(sprite, r, collisionBox.x, collisionBox.y, facingRight);
 		

@@ -3,7 +3,6 @@
 
 #include "common.h"
 #include <math.h> // needed for atan2 in directional collision
-#include <iostream> // DEBUG
 
 namespace PPM
 {

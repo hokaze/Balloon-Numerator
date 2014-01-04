@@ -2,7 +2,6 @@
 
 #include "balloonist.h"
 #include "enemy.h"
-//#include <iostream> // DEBUG
 using namespace std;
 using namespace PPM;
 
@@ -39,7 +38,7 @@ int main(int argc, char*argv[])
 			{
 				running = false;
 			}
-			if (event.type == SDL_KEYDOWN)
+			if (event.type == SDL_KEYDOWN || event.type == SDL_KEYUP)
 			{
 				player.move(event);
 			}
