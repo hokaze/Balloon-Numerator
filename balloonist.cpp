@@ -28,8 +28,8 @@ namespace PPM
 		grounded = true;
 		alive = true;
 		facingRight = true;
-		SDL_Texture *charTex = loadTexture(image_file, r);
-		collisionBox.w = SDL_QueryTexture(sprite, NULL, NULL, &collisionBox.w, &collisionBox.h);
+		sprite = loadTexture(image_file, r);
+		SDL_QueryTexture(sprite, NULL, NULL, &collisionBox.w, &collisionBox.h);
 	}
 	
 	Balloonist::~Balloonist()

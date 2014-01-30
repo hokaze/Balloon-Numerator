@@ -14,8 +14,8 @@ namespace PPM
     {
         collisionBox.x = x;
         collisionBox.y = y;
-        SDL_Texture *charTex = loadTexture(image_file, r);
-        collisionBox.w = SDL_QueryTexture(sprite, NULL, NULL, &collisionBox.w, &collisionBox.h);
+        sprite = loadTexture(image_file, r);
+        SDL_QueryTexture(sprite, NULL, NULL, &collisionBox.w, &collisionBox.h);
     }
     
     Platform::~Platform()

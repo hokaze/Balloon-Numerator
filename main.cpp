@@ -26,10 +26,12 @@ int main(int argc, char*argv[])
     list<void*> objectList;
 	Balloonist* player = new Balloonist(rend);
 	Enemy1* foe = new Enemy1(rend);
-    Platform* ground = new Platform(rend);
+    Platform* ground1 = new Platform(0, 550, "platform1.png", rend);
+    Platform* ground2 = new Platform(650, 550, "platform1.png", rend);
     objectList.push_back(player);
     objectList.push_back(foe);
-    objectList.push_back(ground);
+    objectList.push_back(ground1);
+    objectList.push_back(ground2);
 	
 	cout << "Running..." << endl;
 	
@@ -44,7 +46,6 @@ int main(int argc, char*argv[])
 			if (event.type == SDL_KEYDOWN || event.type == SDL_KEYUP)
 			{
 				player->move(event);
-                std::cout << "KEY DOWN" << std::endl;
 			}
 		}
 		
@@ -57,7 +58,8 @@ int main(int argc, char*argv[])
         }*/
 		player->update(rend);
 		foe->update(rend);
-        ground->update(rend);
+        ground1->update(rend);
+        ground2->update(rend);
 		SDL_RenderPresent(rend);
 		
 		// DEBUG - check collisions
@@ -83,7 +85,11 @@ int main(int argc, char*argv[])
 			}
 			player->bounce(collide);
 		}
-		collide = checkCollision(player->collisionBox, ground->collisionBox);
+		collide = 0;
+		collide = checkCollision(player->collisionBox, ground1->collisionBox);
+        if (collide) {player->bounce(collide);}
+        collide = 0;
+        collide = checkCollision(player->collisionBox, ground2->collisionBox);
         if (collide) {player->bounce(collide);}
 	}
 	
