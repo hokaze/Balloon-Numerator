@@ -2,6 +2,7 @@
 
 #include "balloonist.h"
 #include "enemy.h"
+#include "platform.h"
 using namespace std;
 using namespace PPM;
 
@@ -21,9 +22,14 @@ int main(int argc, char*argv[])
 	SDL_Event event;
 	bool running = true;
 	
-	// Create our player and a sample enemy
-	Balloonist player(rend);
-	Enemy1 foe(rend);
+	// Create our objects
+    list<void*> objectList;
+	Balloonist* player = new Balloonist(rend);
+	Enemy1* foe = new Enemy1(rend);
+    Platform* ground = new Platform(rend);
+    objectList.push_back(player);
+    objectList.push_back(foe);
+    objectList.push_back(ground);
 	
 	cout << "Running..." << endl;
 	
@@ -37,19 +43,25 @@ int main(int argc, char*argv[])
 			}
 			if (event.type == SDL_KEYDOWN || event.type == SDL_KEYUP)
 			{
-				player.move(event);
+				player->move(event);
+                std::cout << "KEY DOWN" << std::endl;
 			}
 		}
 		
 		// Clear renderer, copy texture to it and display
 		SDL_RenderClear(rend);
 		renderTexture(bgTex, rend, 0, 0);
-		player.update(rend);
-		foe.update(rend);
+        /*for (list<void*>::iterator i = objectList.begin(); i != objectList.end(); ++i)
+        {
+            (*i).update(rend);
+        }*/
+		player->update(rend);
+		foe->update(rend);
+        ground->update(rend);
 		SDL_RenderPresent(rend);
 		
 		// DEBUG - check collisions
-		int collide = checkCollision(player.collisionBox, foe.collisionBox);
+		int collide = checkCollision(player->collisionBox, foe->collisionBox);
 		if (collide)
 		{
 			cout << "Collision: ";
@@ -69,7 +81,10 @@ int main(int argc, char*argv[])
 			{
 				cout << " ABOVE" << endl;
 			}
+			player->bounce(collide);
 		}
+		collide = checkCollision(player->collisionBox, ground->collisionBox);
+        if (collide) {player->bounce(collide);}
 	}
 	
 	// Clean up objects and safely close SDL

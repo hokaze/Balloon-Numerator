@@ -20,8 +20,8 @@ namespace PPM
 	
 	Balloonist::Balloonist(int x, int y, int starting_balloons, int starting_lives, std::string image_file, SDL_Renderer *r)
 	{
-		collisionBox.x = 50;
-		collisionBox.y = 50;
+		collisionBox.x = x;
+		collisionBox.y = y;
 		balloons = starting_balloons;
 		lives = starting_lives;
 		score = 0;
@@ -45,10 +45,10 @@ namespace PPM
 			// Increment velocity
 			switch(event.key.keysym.sym)
 			{
-				case SDLK_UP: y_speed = -4; break;
+				case SDLK_UP: y_speed = -8; break;
 				//case SDLK_DOWN: y_speed = 4; break;
-				case SDLK_LEFT: x_speed -= 4; facingRight = false; break;
-				case SDLK_RIGHT: x_speed += 4; facingRight = true; break;
+				case SDLK_LEFT: x_speed -= 8; facingRight = false; break;
+				case SDLK_RIGHT: x_speed += 8; facingRight = true; break;
 			}
 		}
 		if (event.type == SDL_KEYUP)
@@ -63,6 +63,14 @@ namespace PPM
 			}
 		}
 	}
+	
+	void Balloonist::bounce(int direction)
+    {
+        if (direction == 1) {x_speed -= 2;} // bounce left
+        else if (direction == 2) {x_speed += 2;} // bounce right
+        else if (direction == 3) {y_speed += 4;} // bounce down
+        else if (direction == 4) {y_speed -= 4;} // bounce up
+    }
 	
 	void Balloonist::update(SDL_Renderer *r)
 	{

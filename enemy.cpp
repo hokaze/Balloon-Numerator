@@ -21,37 +21,30 @@ namespace PPM
 	
 	void Enemy1::move(SDL_Event event)
 	{
-		// Primitive movement
-		/*switch(event.key.keysym.sym)
-		{
-			case SDLK_UP: collisionBox.y -= 5; break;
-			case SDLK_DOWN: collisionBox.y += 5; break;
-			case SDLK_LEFT: collisionBox.x -= 5; facingRight = false; break;
-			case SDLK_RIGHT: collisionBox.x += 5; facingRight = true; break;
-		}*/
-		
-		// Horizontal screen-wrap
-		if (collisionBox.x < -30) {collisionBox.x = 610;}
-		else if (collisionBox.x > 610) {collisionBox.x = -30;}
-		
-		// Vertical screen-bounds
-		if (collisionBox.y < 0) {collisionBox.y = 0;}
-		else if (collisionBox.y > 390) {collisionBox.y = 390;}
+		// TODO
 	}
 	
 	void Enemy1::update(SDL_Renderer *r)
 	{
-		// Draw to screen
-		renderTexture(sprite, r, collisionBox.x, collisionBox.y, facingRight);
-		
-		// Make horizontal screen-wrap render on both sides of screen
-		if (collisionBox.x < 0)
-		{
-			renderTexture(sprite, r, collisionBox.x + 640, collisionBox.y, facingRight);
-		}
-		else if (collisionBox.x > 580)
-		{
-			renderTexture(sprite, r, collisionBox.x - 640, collisionBox.y, facingRight);
-		}
+		// Horizontal screen-wrap
+        if (collisionBox.x < -30) {collisionBox.x = SCREEN_WIDTH - (collisionBox.w / 2);}
+        else if (collisionBox.x > SCREEN_WIDTH - (collisionBox.w / 2)) {collisionBox.x = -30;}
+        
+        // Vertical screen-bounds
+        if (collisionBox.y < 0) {collisionBox.y = 0; y_speed = 0;}
+        else if (collisionBox.y > SCREEN_HEIGHT - collisionBox.h) {collisionBox.y = SCREEN_HEIGHT - collisionBox.h;}
+        
+        // Draw to screen
+        renderTexture(sprite, r, collisionBox.x, collisionBox.y, facingRight);
+        
+        // Make horizontal screen-wrap render on both sides of screen
+        if (collisionBox.x < 0)
+        {
+            renderTexture(sprite, r, collisionBox.x + SCREEN_WIDTH, collisionBox.y, facingRight);
+        }
+        else if (collisionBox.x > SCREEN_WIDTH - collisionBox.w)
+        {
+            renderTexture(sprite, r, collisionBox.x - SCREEN_WIDTH, collisionBox.y, facingRight);
+        }
 	}
 }

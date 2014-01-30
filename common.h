@@ -16,6 +16,7 @@
 #endif
 
 #include <string>
+#include <list>
 #include <iostream> // DEBUG
 
 #endif

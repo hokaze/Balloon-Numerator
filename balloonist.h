@@ -25,10 +25,10 @@ namespace PPM
 			~Balloonist();
 			//void move(bool direction); // final move is just left/right
 			void move(SDL_Event event); // prototype move is up/down/left/right
+            void bounce(int direction);
 			void fall();
 			void flap();
-			void collisions();
-			//void kick(Enemy foe); // No "enemy" class exists yet
+			//void kick(Enemy foe);
 			//void stomp(Enemy foe);
 			void update(SDL_Renderer *r);
 	};
