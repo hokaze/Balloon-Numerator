@@ -23,7 +23,7 @@ int main(int argc, char*argv[])
 	bool running = true;
 	
 	// Create our objects
-    list<void*> objectList;
+    vector<void*> objectList;
 	Balloonist* player = new Balloonist(rend);
 	Enemy1* foe = new Enemy1(rend);
     Platform* ground1 = new Platform(0, 550, "platform1.png", rend);
@@ -52,9 +52,9 @@ int main(int argc, char*argv[])
 		// Clear renderer, copy texture to it and display
 		SDL_RenderClear(rend);
 		renderTexture(bgTex, rend, 0, 0);
-        /*for (list<void*>::iterator i = objectList.begin(); i != objectList.end(); ++i)
+        /*for (int i = 0; i < objectList.size(); ++i)
         {
-            (*i).update(rend);
+            objectList.at(i)->update(rend);
         }*/
 		player->update(rend);
 		foe->update(rend);
