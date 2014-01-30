@@ -4,6 +4,9 @@
 #include "common.h"
 #include <math.h> // needed for atan2 in directional collision
 
+const int SCREEN_WIDTH = 800;
+const int SCREEN_HEIGHT = 600;
+
 namespace PPM
 {
 	SDL_Texture* loadTexture(const std::string &file, SDL_Renderer *renderer);

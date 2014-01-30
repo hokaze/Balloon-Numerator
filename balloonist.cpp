@@ -83,12 +83,12 @@ namespace PPM
 		collisionBox.y += y_speed;
 		
 		// Horizontal screen-wrap
-		if (collisionBox.x < -30) {collisionBox.x = 610;}
-		else if (collisionBox.x > 610) {collisionBox.x = -30;}
+		if (collisionBox.x < -30) {collisionBox.x = SCREEN_WIDTH - (collisionBox.w / 2);}
+		else if (collisionBox.x > SCREEN_WIDTH - (collisionBox.w / 2)) {collisionBox.x = -30;}
 		
 		// Vertical screen-bounds
 		if (collisionBox.y < 0) {collisionBox.y = 0; y_speed = 0;}
-		else if (collisionBox.y > 390) {collisionBox.y = 390;}
+		else if (collisionBox.y > SCREEN_HEIGHT - collisionBox.h) {collisionBox.y = SCREEN_HEIGHT - collisionBox.h;}
 		
 		// Draw to screen
 		renderTexture(sprite, r, collisionBox.x, collisionBox.y, facingRight);
@@ -96,11 +96,11 @@ namespace PPM
 		// Make horizontal screen-wrap render on both sides of screen
 		if (collisionBox.x < 0)
 		{
-			renderTexture(sprite, r, collisionBox.x + 640, collisionBox.y, facingRight);
+			renderTexture(sprite, r, collisionBox.x + SCREEN_WIDTH, collisionBox.y, facingRight);
 		}
-		else if (collisionBox.x > 580)
+		else if (collisionBox.x > SCREEN_WIDTH - collisionBox.w)
 		{
-			renderTexture(sprite, r, collisionBox.x - 640, collisionBox.y, facingRight);
+			renderTexture(sprite, r, collisionBox.x - SCREEN_WIDTH, collisionBox.y, facingRight);
 		}
 	}
 }
