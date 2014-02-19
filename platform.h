@@ -1,21 +1,21 @@
 #ifndef PPM__PLATFORM
 #define PPM__PLATFORM
 
-#include "gfx.h"
+#include "baseObject.h"
 
 namespace PPM
 {
-    class Platform
+    class Platform : public BaseObject
     {
-        private:
-            SDL_Texture *sprite;
+        //protected:
+            // POLY //SDL_Texture *sprite;
         public:
-            SDL_Rect collisionBox;
+            // POLY //SDL_Rect collisionBox;
             Platform();
             Platform(SDL_Renderer *r);
             Platform(int x, int y, std::string image_file, SDL_Renderer *r);
             ~Platform();
-            virtual void update(SDL_Renderer *r);
+            // POLY //void update(SDL_Renderer *r);
     };
 }
 

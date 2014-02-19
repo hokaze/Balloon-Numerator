@@ -1,16 +1,16 @@
-#include "platform.h"
+#include "baseObject.h"
 
 namespace PPM
 {
-    Platform::Platform(SDL_Renderer *r) : BaseObject(r)
+    BaseObject::BaseObject(SDL_Renderer *r)
     {
-        collisionBox.x = 250;
-        collisionBox.y = 250;
-        sprite = loadTexture("platform1.png", r);
+        collisionBox.x = 320;
+        collisionBox.y = 260;
+        sprite = loadTexture("error.png", r);
         SDL_QueryTexture(sprite, NULL, NULL, &collisionBox.w, &collisionBox.h);
     }
     
-    Platform::Platform(int x, int y, std::string image_file, SDL_Renderer *r) : BaseObject(x, y, image_file, r) 
+    BaseObject::BaseObject(int x, int y, std::string image_file, SDL_Renderer *r) 
     {
         collisionBox.x = x;
         collisionBox.y = y;
@@ -18,14 +18,14 @@ namespace PPM
         SDL_QueryTexture(sprite, NULL, NULL, &collisionBox.w, &collisionBox.h);
     }
     
-    Platform::~Platform()
+    BaseObject::~BaseObject()
     {
         SDL_DestroyTexture(sprite);
     }
     
-    /*void Platform::update(SDL_Renderer *r)
+    void BaseObject::update(SDL_Renderer *r)
     {
         // Draw to screen
         renderTexture(sprite, r, collisionBox.x, collisionBox.y);
-    }*/
+    }
 }

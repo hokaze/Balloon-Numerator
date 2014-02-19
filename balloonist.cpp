@@ -2,7 +2,7 @@
 
 namespace PPM
 {
-	Balloonist::Balloonist(SDL_Renderer *r)
+	Balloonist::Balloonist(SDL_Renderer *r) : Enemy1(r)
 	{
 		collisionBox.x = 50;
 		collisionBox.y = 50;
@@ -18,7 +18,7 @@ namespace PPM
 		SDL_QueryTexture(sprite, NULL, NULL, &collisionBox.w, &collisionBox.h);
 	}
 	
-	Balloonist::Balloonist(int x, int y, int starting_balloons, int starting_lives, std::string image_file, SDL_Renderer *r)
+	Balloonist::Balloonist(int x, int y, int starting_balloons, int starting_lives, std::string image_file, SDL_Renderer *r) : Enemy1(r)
 	{
 		collisionBox.x = x;
 		collisionBox.y = y;

@@ -2,7 +2,7 @@
 
 namespace PPM
 {
-	Enemy1::Enemy1(SDL_Renderer *r)
+	Enemy1::Enemy1(SDL_Renderer *r) : BaseObject(r)
 	{
 		collisionBox.x = 550;
 		collisionBox.y = 350;
