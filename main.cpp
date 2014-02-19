@@ -16,18 +16,19 @@ int main(int argc, char*argv[])
 	SDL_Renderer *rend = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
 	
 	// Load background image file
-	SDL_Texture *bgTex = loadTexture("background.png", rend);
+	SDL_Texture *bgTex = loadTexture("img/background.png", rend);
 	
 	// Event structure for handling input and rendering until closed
 	SDL_Event event;
 	bool running = true;
+    srand(time(NULL));
 	
 	// Create our objects
     vector<BaseObject*> objectList;
 	Balloonist* player = new Balloonist(rend);
 	Enemy1* foe = new Enemy1(rend);
-    Platform* ground1 = new Platform(0, 550, "platform1.png", rend);
-    Platform* ground2 = new Platform(650, 550, "platform1.png", rend);
+    Platform* ground1 = new Platform(0, 550, "img/platform1.png", rend);
+    Platform* ground2 = new Platform(650, 550, "img/platform1.png", rend);
     objectList.push_back(player);
     objectList.push_back(foe);
     objectList.push_back(ground1);
@@ -48,6 +49,7 @@ int main(int argc, char*argv[])
 				player->move(event);
 			}
 		}
+		foe->move();
 		
 		// Clear renderer, copy texture to it and display
 		SDL_RenderClear(rend);
@@ -66,31 +68,39 @@ int main(int argc, char*argv[])
 		int collide = checkCollision(player->collisionBox, foe->collisionBox);
 		if (collide)
 		{
-			cout << "Collision: ";
+			//cout << "Collision: ";
 			if (collide == 1)
 			{
-				cout << " LEFT" << endl;
+				//cout << " LEFT" << endl;
 			}
 			else if (collide == 2)
 			{
-				cout << " RIGHT" << endl;
+				//cout << " RIGHT" << endl;
 			}
 			else if (collide == 3)
 			{
-				cout << " BELOW" << endl;
+				//cout << " BELOW" << endl;
 			}
 			else
 			{
-				cout << " ABOVE" << endl;
+				//cout << " ABOVE" << endl;
 			}
 			player->bounce(collide);
 		}
+		// Player - Ground bouncing
 		collide = 0;
 		collide = checkCollision(player->collisionBox, ground1->collisionBox);
         if (collide) {player->bounce(collide);}
         collide = 0;
         collide = checkCollision(player->collisionBox, ground2->collisionBox);
         if (collide) {player->bounce(collide);}
+        // Enemy - Ground bouncing
+        collide = 0;
+        collide = checkCollision(foe->collisionBox, ground1->collisionBox);
+        if (collide) {foe->bounce(collide);}
+        collide = 0;
+        collide = checkCollision(foe->collisionBox, ground2->collisionBox);
+        if (collide) {foe->bounce(collide);}
 	}
 	
 	// Clean up objects and safely close SDL

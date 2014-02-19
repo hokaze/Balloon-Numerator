@@ -6,7 +6,7 @@ namespace PPM
     {
         collisionBox.x = 250;
         collisionBox.y = 250;
-        sprite = loadTexture("platform1.png", r);
+        sprite = loadTexture("img/platform1.png", r);
         SDL_QueryTexture(sprite, NULL, NULL, &collisionBox.w, &collisionBox.h);
     }
     

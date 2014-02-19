@@ -14,7 +14,7 @@ namespace PPM
 		grounded = false;
 		alive = true;
 		facingRight = true;
-		sprite = loadTexture("balloonist.png", r);
+		sprite = loadTexture("img/balloonist.png", r);
 		SDL_QueryTexture(sprite, NULL, NULL, &collisionBox.w, &collisionBox.h);
 	}
 	
@@ -64,13 +64,13 @@ namespace PPM
 		}
 	}
 	
-	void Balloonist::bounce(int direction)
+	/*void Balloonist::bounce(int direction)
     {
         if (direction == 1) {x_speed -= 2;} // bounce left
         else if (direction == 2) {x_speed += 2;} // bounce right
         else if (direction == 3) {y_speed += 4;} // bounce down
         else if (direction == 4) {y_speed -= 4;} // bounce up
-    }
+    }*/
 	
 	void Balloonist::update(SDL_Renderer *r)
 	{

@@ -91,7 +91,7 @@ namespace PPM
 		float angle = atan2(centre_a_y - centre_b_y, centre_a_x - centre_b_x);
 		angle = angle * (180 / 3.14); // convert to degrees, roughly
 		
-		std::cout << "ANGLE = " << angle << std::endl; // DEBUG
+		//std::cout << "ANGLE = " << angle << std::endl; // DEBUG
 		
 		if (angle > -45 && angle < 45)
 		{

@@ -21,10 +21,11 @@ namespace PPM
 			// POLY //SDL_Rect collisionBox; // placed in public temporarily to test collision
 			Enemy1(SDL_Renderer *r);
 			~Enemy1();
-			//void move(bool direction); // final move is just left/right
-			void move(SDL_Event event); // prototype move is up/down/left/right
-			void fall();
-			void flap();
+			//void move(bool direction);
+			void move();
+            void bounce(int directin);
+			//void fall();
+			//void flap();
 			virtual void update(SDL_Renderer *r);
 	};
 }
