@@ -31,6 +31,7 @@ namespace PPM
 			//void fall();
 			//void flap();
 			virtual void update(SDL_Renderer *r);
+            virtual bool isAlive();
 	};
 }
 

@@ -37,7 +37,9 @@ namespace PPM
 	
 	Balloonist::~Balloonist()
 	{
-		SDL_DestroyTexture(sprite);
+		SDL_DestroyTexture(sprite2);
+        SDL_DestroyTexture(sprite1);
+        SDL_DestroyTexture(sprite0);
 	}
 	
 	void Balloonist::move(SDL_Event event)

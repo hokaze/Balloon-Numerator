@@ -79,8 +79,24 @@ namespace PPM
         else if (collisionBox.x > SCREEN_WIDTH - (collisionBox.w / 2)) {collisionBox.x = -30;}
         
         // Vertical screen-bounds
-        if (collisionBox.y < 0) {collisionBox.y = 0; y_speed = 0;}
-        else if (collisionBox.y > SCREEN_HEIGHT - collisionBox.h) {collisionBox.y = SCREEN_HEIGHT - collisionBox.h; y_speed = 0;}
+        if (collisionBox.y < 0)
+        {
+            collisionBox.y = 0;
+            y_speed = 0;
+        }
+        else if (collisionBox.y > SCREEN_HEIGHT - collisionBox.h)
+        {
+            // Only protect from falling off screen if they have balloons
+            if (balloons > 0)
+            {
+                collisionBox.y = SCREEN_HEIGHT - collisionBox.h;
+                y_speed = 0;
+            }
+            else
+            {
+                alive = false;
+            }
+        }
         
         // Make horizontal screen-wrap render on both sides of screen
         if (collisionBox.x < 0)
@@ -92,4 +108,9 @@ namespace PPM
             renderTexture(sprite, r, collisionBox.x - SCREEN_WIDTH, collisionBox.y, facingRight);
         }
 	}
+	
+	bool Enemy1::isAlive()
+    {
+        return alive;
+    }
 }

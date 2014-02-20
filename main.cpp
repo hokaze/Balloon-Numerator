@@ -20,10 +20,22 @@ int main(int argc, char*argv[])
 	
 	// Event structure for handling input and rendering until closed
 	SDL_Event event;
-	bool running = true;
+    
     srand(time(NULL));
+	bool running = true;
+    bool menu = true;
+    
+    int collide = 0;
+    int enemyCollide = 0;
 	
-	// Create our objects
+    // Create menu objects
+    SDL_Texture *menuBG = loadTexture("img/menuBackground.png", rend);
+    SDL_Texture *menuSelect = loadTexture("img/menuSelector.png", rend);
+    int menuItem = 1;
+    const int menuItemLast = 4;
+    int level = 0;
+    
+	// Create our main game objects
     vector<BaseObject*> objectList;
 	Balloonist* player = new Balloonist(rend);
 	Enemy1* foe = new Enemy1(rend);
@@ -38,78 +50,170 @@ int main(int argc, char*argv[])
 	
 	while (running)
 	{
-		while (SDL_PollEvent(&event))
-		{
-			if (event.type == SDL_QUIT)
-			{
-				running = false;
-			}
-			if (event.type == SDL_KEYDOWN || event.type == SDL_KEYUP)
-			{
-				player->move(event);
-			}
-		}
-		foe->move();
-		
-		// Clear renderer, copy texture to it and display
-		SDL_RenderClear(rend);
-		renderTexture(bgTex, rend, 0, 0);
-        for (int i = 0; i < objectList.size(); ++i)
+        // MENU LOOP //
+        
+        while (menu)
         {
-            objectList.at(i)->update(rend);
+            while (SDL_PollEvent(&event))
+            {
+                if (event.type == SDL_KEYDOWN)
+                {
+                    if (event.key.keysym.sym == SDLK_UP)
+                    {
+                        if (menuItem > 1) {menuItem--;}
+                    }
+                    if (event.key.keysym.sym == SDLK_DOWN)
+                    {
+                        if (menuItem < menuItemLast) {menuItem++;}
+                    }
+                    if (event.key.keysym.sym == SDLK_RETURN)
+                    {
+                        // Normal level
+                        if (menuItem == 1)
+                        {
+                            menu = false;
+                            level = 1;
+                        }
+                        // Educational level
+                        /*else if (menuItem == 2)
+                        {
+                            menu = false;
+                            level = 2;
+                        }*/
+                        // Display help
+                        /*else if (menuItem == 3)
+                        {
+                            // render help message and pause for user input here
+                        }*/
+                        // Quit game
+                        else if (menuItem == 4)
+                        {
+                            menu = false;
+                            level = -1;
+                            running = false;
+                        }
+                    }
+                }
+                if (event.type == SDL_QUIT)
+                {
+                    menu = false;
+                    running = false;
+                    level = -1;
+                }
+            }
+            
+            // Clear renderer, copy texture to it and display
+            SDL_RenderClear(rend);
+            
+            // Render meny
+            renderTexture(menuBG, rend, 0, 0);
+            if (menuItem == 1)
+            {
+                renderTexture(menuSelect, rend, 0, 200);
+            }
+            else if (menuItem == 2)
+            {
+                renderTexture(menuSelect, rend, 0, 290);
+            }
+            else if (menuItem == 3)
+            {
+                renderTexture(menuSelect, rend, 0, 385);
+            }
+            else if (menuItem == 4)
+            {
+                renderTexture(menuSelect, rend, 0, 475);
+            }
+            SDL_RenderPresent(rend);
         }
-		//player->update(rend);
-		//foe->update(rend);
-        //ground1->update(rend);
-        //ground2->update(rend);
-		SDL_RenderPresent(rend);
-		
-		// DEBUG - check collisions
-		int collide = checkCollision(player->collisionBox, foe->collisionBox);
-        int enemyCollide = 0;
-		if (collide)
-		{
-			//cout << "Collision: ";
-			if (collide == 1)
-			{
-                enemyCollide = 2;
-				//cout << " LEFT" << endl;
-			}
-			else if (collide == 2)
-			{
-                enemyCollide = 1;
-				//cout << " RIGHT" << endl;
-			}
-			else if (collide == 3)
-			{
-                enemyCollide = 4;
-                player->pop(1);
-				//cout << " BELOW" << endl;
-			}
-			else
-			{
-                enemyCollide = 3;
-                foe->pop(1);
-				//cout << " ABOVE" << endl;
-			}
-			player->bounce(collide);
-            foe->bounce(enemyCollide);
-		}
-		// Player - Ground bouncing
-		collide = 0;
-		collide = checkCollision(player->collisionBox, ground1->collisionBox);
-        if (collide) {player->bounce(collide);}
-        collide = 0;
-        collide = checkCollision(player->collisionBox, ground2->collisionBox);
-        if (collide) {player->bounce(collide);}
-        // Enemy - Ground bouncing
-        enemyCollide = 0;
-        enemyCollide = checkCollision(foe->collisionBox, ground1->collisionBox);
-        if (enemyCollide) {foe->bounce(enemyCollide);}
-        enemyCollide = 0;
-        enemyCollide = checkCollision(foe->collisionBox, ground2->collisionBox);
-        if (enemyCollide) {foe->bounce(enemyCollide);}
-	}
+        
+        
+        // MAIN GAME LOOP //
+        
+        while (level == 1)
+        {
+            while (SDL_PollEvent(&event))
+            {
+                if (event.type == SDL_QUIT)
+                {
+                    running = false;
+                    menu = false;
+                    level = -1;
+                }
+                if (event.type == SDL_KEYDOWN || event.type == SDL_KEYUP)
+                {
+                    player->move(event);
+                }
+            }
+            if (foe->isAlive())
+            {
+                foe->move();
+            }
+            
+            // Clear renderer, copy texture to it and display
+            SDL_RenderClear(rend);
+            renderTexture(bgTex, rend, 0, 0);
+            for (int i = 0; i < objectList.size(); ++i)
+            {
+                objectList.at(i)->update(rend);
+            }
+            //player->update(rend);
+            //foe->update(rend);
+            //ground1->update(rend);
+            //ground2->update(rend);
+            SDL_RenderPresent(rend);
+            
+            // Check collisions between player and enemy
+            if (foe->isAlive())
+            {
+                collide = checkCollision(player->collisionBox, foe->collisionBox);
+                enemyCollide = 0;
+                if (collide)
+                {
+                    //cout << "Collision: ";
+                    if (collide == 1)
+                    {
+                        enemyCollide = 2;
+                        //cout << " LEFT" << endl;
+                    }
+                    else if (collide == 2)
+                    {
+                        enemyCollide = 1;
+                        //cout << " RIGHT" << endl;
+                    }
+                    else if (collide == 3)
+                    {
+                        enemyCollide = 4;
+                        player->pop(1);
+                        //cout << " BELOW" << endl;
+                    }
+                    else
+                    {
+                        enemyCollide = 3;
+                        foe->pop(1);
+                        //cout << " ABOVE" << endl;
+                    }
+                    player->bounce(collide);
+                    foe->bounce(enemyCollide);
+                }
+                
+                // Enemy - Ground bouncing
+                enemyCollide = 0;
+                enemyCollide = checkCollision(foe->collisionBox, ground1->collisionBox);
+                if (enemyCollide) {foe->bounce(enemyCollide);}
+                enemyCollide = 0;
+                enemyCollide = checkCollision(foe->collisionBox, ground2->collisionBox);
+                if (enemyCollide) {foe->bounce(enemyCollide);}
+            }
+            
+            // Player - Ground bouncing
+            collide = 0;
+            collide = checkCollision(player->collisionBox, ground1->collisionBox);
+            if (collide) {player->bounce(collide);}
+            collide = 0;
+            collide = checkCollision(player->collisionBox, ground2->collisionBox);
+            if (collide) {player->bounce(collide);}
+        }
+    }
 	
 	// Clean up objects and safely close SDL
 	SDL_DestroyTexture(bgTex);
