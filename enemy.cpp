@@ -19,7 +19,9 @@ namespace PPM
 	
 	Enemy1::~Enemy1()
 	{
-		SDL_DestroyTexture(sprite);
+		SDL_DestroyTexture(sprite2);
+        SDL_DestroyTexture(sprite1);
+        SDL_DestroyTexture(sprite0);
 	}
 	
 	void Enemy1::move()
@@ -40,10 +42,15 @@ namespace PPM
     
     void Enemy1::pop(int damage)
     {
-        balloons -= damage;
-        if (balloons == 2) {sprite = sprite2;}
-        else if (balloons == 1) {sprite = sprite1;}
-        else {sprite = sprite0;}
+        int ticksPassed = damageClock.restart();
+        // Only take damage if not damaged yet or it's been 60 ticks (should be about 1 second)
+        if (ticksPassed == 0 || ticksPassed > 60)
+        {
+            balloons -= damage;
+            if (balloons == 2) {sprite = sprite2;}
+            else if (balloons == 1) {sprite = sprite1;}
+            else {sprite = sprite0;}
+        }
     }
 	
 	void Enemy1::update(SDL_Renderer *r)
@@ -73,7 +80,7 @@ namespace PPM
         
         // Vertical screen-bounds
         if (collisionBox.y < 0) {collisionBox.y = 0; y_speed = 0;}
-        else if (collisionBox.y > SCREEN_HEIGHT - collisionBox.h) {collisionBox.y = SCREEN_HEIGHT - collisionBox.h;}
+        else if (collisionBox.y > SCREEN_HEIGHT - collisionBox.h) {collisionBox.y = SCREEN_HEIGHT - collisionBox.h; y_speed = 0;}
         
         // Make horizontal screen-wrap render on both sides of screen
         if (collisionBox.x < 0)

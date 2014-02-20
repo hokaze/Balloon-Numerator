@@ -83,6 +83,7 @@ int main(int argc, char*argv[])
 			else if (collide == 3)
 			{
                 enemyCollide = 4;
+                player->pop(1);
 				//cout << " BELOW" << endl;
 			}
 			else

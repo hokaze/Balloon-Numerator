@@ -2,6 +2,7 @@
 #define PPM__ENEMY1
 
 #include "baseObject.h"
+#include "timer.h"
 
 namespace PPM
 {
@@ -15,6 +16,7 @@ namespace PPM
 			int balloons, score, lives;
 			float x_speed, y_speed;
 			bool alive, grounded, facingRight;
+            Timer damageClock;
             SDL_Texture *sprite2, *sprite1, *sprite0;
 			// POLY //SDL_Texture *sprite;
 			//SDL_Rect collisionBox; // restore this when collision works properly
