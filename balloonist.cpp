@@ -46,7 +46,7 @@ namespace PPM
 			switch(event.key.keysym.sym)
 			{
 				case SDLK_UP: y_speed = -8; break;
-				//case SDLK_DOWN: y_speed = 4; break;
+				//case SDLK_DOWN: y_speed += 4; break;
 				case SDLK_LEFT: x_speed -= 8; facingRight = false; break;
 				case SDLK_RIGHT: x_speed += 8; facingRight = true; break;
 			}
@@ -57,7 +57,7 @@ namespace PPM
 			switch(event.key.keysym.sym)
 			{
 				case SDLK_UP: y_speed += 2; break;
-				//case SDLK_DOWN: y_speed -= 3; break;
+				//case SDLK_DOWN: y_speed -= 1; break;
 				case SDLK_LEFT: x_speed += 3; break;
 				case SDLK_RIGHT: x_speed -= 3; break;
 			}

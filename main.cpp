@@ -66,26 +66,32 @@ int main(int argc, char*argv[])
 		
 		// DEBUG - check collisions
 		int collide = checkCollision(player->collisionBox, foe->collisionBox);
+        int enemyCollide = 0;
 		if (collide)
 		{
 			//cout << "Collision: ";
 			if (collide == 1)
 			{
+                enemyCollide = 2;
 				//cout << " LEFT" << endl;
 			}
 			else if (collide == 2)
 			{
+                enemyCollide = 1;
 				//cout << " RIGHT" << endl;
 			}
 			else if (collide == 3)
 			{
+                enemyCollide = 4;
 				//cout << " BELOW" << endl;
 			}
 			else
 			{
+                enemyCollide = 3;
 				//cout << " ABOVE" << endl;
 			}
 			player->bounce(collide);
+            foe->bounce(enemyCollide);
 		}
 		// Player - Ground bouncing
 		collide = 0;
@@ -95,12 +101,12 @@ int main(int argc, char*argv[])
         collide = checkCollision(player->collisionBox, ground2->collisionBox);
         if (collide) {player->bounce(collide);}
         // Enemy - Ground bouncing
-        collide = 0;
-        collide = checkCollision(foe->collisionBox, ground1->collisionBox);
-        if (collide) {foe->bounce(collide);}
-        collide = 0;
-        collide = checkCollision(foe->collisionBox, ground2->collisionBox);
-        if (collide) {foe->bounce(collide);}
+        enemyCollide = 0;
+        enemyCollide = checkCollision(foe->collisionBox, ground1->collisionBox);
+        if (enemyCollide) {foe->bounce(enemyCollide);}
+        enemyCollide = 0;
+        enemyCollide = checkCollision(foe->collisionBox, ground2->collisionBox);
+        if (enemyCollide) {foe->bounce(enemyCollide);}
 	}
 	
 	// Clean up objects and safely close SDL
