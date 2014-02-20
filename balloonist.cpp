@@ -8,13 +8,16 @@ namespace PPM
 		collisionBox.y = 50;
 		x_speed = 0;
 		y_speed = 0.01;
-		balloons = 3;
+		balloons = 2;
 		lives = 3;
 		score = 0;
 		grounded = false;
 		alive = true;
 		facingRight = true;
-		sprite = loadTexture("img/balloonist.png", r);
+		sprite2 = loadTexture("img/player/2balloons.png", r);
+        sprite1 = loadTexture("img/player/1balloon.png", r);
+        sprite0 = loadTexture("img/player/0balloon.png", r);
+        sprite = sprite2;
 		SDL_QueryTexture(sprite, NULL, NULL, &collisionBox.w, &collisionBox.h);
 	}
 	

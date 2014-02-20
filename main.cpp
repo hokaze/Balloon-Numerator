@@ -27,8 +27,8 @@ int main(int argc, char*argv[])
     vector<BaseObject*> objectList;
 	Balloonist* player = new Balloonist(rend);
 	Enemy1* foe = new Enemy1(rend);
-    Platform* ground1 = new Platform(0, 550, "img/platform1.png", rend);
-    Platform* ground2 = new Platform(650, 550, "img/platform1.png", rend);
+    Platform* ground1 = new Platform(-10, 550, "img/platform1.png", rend);
+    Platform* ground2 = new Platform(660, 550, "img/platform1.png", rend);
     objectList.push_back(player);
     objectList.push_back(foe);
     objectList.push_back(ground1);
@@ -88,6 +88,7 @@ int main(int argc, char*argv[])
 			else
 			{
                 enemyCollide = 3;
+                foe->pop(1);
 				//cout << " ABOVE" << endl;
 			}
 			player->bounce(collide);

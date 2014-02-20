@@ -10,7 +10,10 @@ namespace PPM
 		grounded = false;
 		alive = true;
 		facingRight = false;
-		sprite = loadTexture("img/enemy1.png", r);
+		sprite2 = loadTexture("img/enemy/2balloons.png", r);
+        sprite1 = loadTexture("img/enemy/1balloon.png", r);
+        sprite0 = loadTexture("img/enemy/0balloon.png", r);
+        sprite = sprite2;
 		SDL_QueryTexture(sprite, NULL, NULL, &collisionBox.w, &collisionBox.h);
 	}
 	
@@ -22,9 +25,9 @@ namespace PPM
 	void Enemy1::move()
 	{
         int direction = rand() % 60 + 1;
-        if (direction == 1) {x_speed += 3; facingRight = true;}
-        else if (direction == 2) {x_speed -=3; facingRight = false;}
-        else if (direction == 60) {y_speed -= 4;}
+        if (direction == 1) {x_speed += 1 + (1 * balloons); facingRight = true;}
+        else if (direction == 2) {x_speed -= 1 + (1 * balloons); facingRight = false;}
+        else if (direction == 60) {y_speed -= 3 * balloons;}
 	}
 	
     void Enemy1::bounce(int direction)
@@ -33,6 +36,14 @@ namespace PPM
         else if (direction == 2) {x_speed += 2;} // bounce right
         else if (direction == 3) {y_speed += 4;} // bounce down
         else if (direction == 4) {y_speed -= 4;} // bounce up
+    }
+    
+    void Enemy1::pop(int damage)
+    {
+        balloons -= damage;
+        if (balloons == 2) {sprite = sprite2;}
+        else if (balloons == 1) {sprite = sprite1;}
+        else {sprite = sprite0;}
     }
 	
 	void Enemy1::update(SDL_Renderer *r)

@@ -15,6 +15,7 @@ namespace PPM
 			int balloons, score, lives;
 			float x_speed, y_speed;
 			bool alive, grounded, facingRight;
+            SDL_Texture *sprite2, *sprite1, *sprite0;
 			// POLY //SDL_Texture *sprite;
 			//SDL_Rect collisionBox; // restore this when collision works properly
 		public:
@@ -23,7 +24,8 @@ namespace PPM
 			~Enemy1();
 			//void move(bool direction);
 			void move();
-            void bounce(int directin);
+            void bounce(int direction);
+            void pop(int damage);
 			//void fall();
 			//void flap();
 			virtual void update(SDL_Renderer *r);
