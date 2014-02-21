@@ -8,6 +8,20 @@ namespace PPM
 		SDL_Texture *texture = IMG_LoadTexture(renderer, file.c_str());
 		return texture;
 	}
+    
+    SDL_Texture* renderText(std::string message, std::string fontFile, SDL_Color colour, int fontSize, SDL_Renderer *renderer)
+    {
+        //Open the font
+        TTF_Font *font = TTF_OpenFont(fontFile.c_str(), fontSize);
+        //Render the message to an SDL_Surface, as that's what TTF_RenderText_X returns
+        SDL_Surface *surf = TTF_RenderText_Blended(font, message.c_str(), colour);
+        SDL_Texture *texture = SDL_CreateTextureFromSurface(renderer, surf);
+        //Clean up unneeded stuff
+        SDL_FreeSurface(surf);
+        TTF_CloseFont(font);
+    
+        return texture;
+    }
 
 	// Non-stretch, original size rendering at position (x, y), whether flipped or not
 	void renderTexture(SDL_Texture *tex, SDL_Renderer *renderer, int x, int y, bool facingRight)

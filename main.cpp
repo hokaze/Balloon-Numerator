@@ -14,7 +14,9 @@ int main(int argc, char*argv[])
 	SDL_Window *window = SDL_CreateWindow("Balloon Numerator", 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
 	// Create 2D renderer for window with default driver, graphics acceleration and current refresh rate
 	SDL_Renderer *rend = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
-	
+	// Load TTF support
+    TTF_Init();
+    
 	// Load background image file
 	SDL_Texture *bgTex = loadTexture("img/background.png", rend);
     SDL_Texture *bgTex2 = loadTexture("img/sunsetBackground.png", rend);
@@ -49,9 +51,29 @@ int main(int argc, char*argv[])
     objectList.push_back(ground2);
     
     // Subgame objects
-    Platform* ground3 = new Platform(-50, 550, "img/platform2.png", rend);
+    SDL_Color colourWhite = {255, 255, 255};
+    SDL_Texture *questionText = renderText("What is 84 split in half?", "Roboto.ttf", colourWhite, 30, rend);
+    SDL_Texture *correctText = renderText("Well done, that's right!", "Roboto.ttf", colourWhite, 30, rend);
+    SDL_Texture *wrongText = renderText("Sorry, that's not right", "Roboto.ttf", colourWhite, 30, rend);
+    SDL_Texture *currentText = questionText;
+    BaseObject* balloon42 = new BaseObject(700, 200, "img/numberBalloon.png", rend);
+    BaseObject* balloon34 = new BaseObject(400, 300, "img/numberBalloon.png", rend);
+    SDL_Texture *text42 = renderText("42", "Roboto.ttf", colourWhite, 18, rend);
+    SDL_Texture *text34 = renderText("34", "Roboto.ttf", colourWhite, 18, rend);
+    Platform* ground3 = new Platform(140, 550, "img/platform1.png", rend);
+    Platform* ground4 = new Platform(290, 550, "img/platform1.png", rend);
+    Platform* ground5 = new Platform(440, 550, "img/platform1.png", rend);
+    Platform* ground6 = new Platform(590, 550, "img/platform1.png", rend);
+    Platform* ground7 = new Platform(730, 550, "img/platform1.png", rend);
     objectList2.push_back(player);
+    objectList2.push_back(balloon42);
+    objectList2.push_back(balloon34);
+    objectList2.push_back(ground1);
     objectList2.push_back(ground3);
+    objectList2.push_back(ground4);
+    objectList2.push_back(ground5);
+    objectList2.push_back(ground6);
+    objectList2.push_back(ground7);
 	
 	cout << "Running..." << endl;
 	
@@ -262,13 +284,27 @@ int main(int argc, char*argv[])
             {
                 objectList2.at(i)->update(rend);
             }
+            renderTexture(currentText, rend, 250, 10);
+            renderTexture(text42, rend, 705, 205);
+            renderTexture(text34, rend, 405, 305);
             SDL_RenderPresent(rend);
             
             // Player collisions
             for (int i = 1; i < objectList2.size(); ++i)
             {
                 collide = checkCollision(player->collisionBox, objectList2.at(i)->collisionBox);
-                if (collide) {player->bounce(collide);}
+                if (collide)
+                {
+                    player->bounce(collide);
+                    if (objectList2.at(i) == balloon42)
+                    {
+                        currentText = correctText;
+                    }
+                    else if (objectList2.at(i) == balloon34)
+                    {
+                        currentText = wrongText;
+                    }
+                }
             }
         }
     }
