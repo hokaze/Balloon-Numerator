@@ -93,7 +93,7 @@ namespace PPM
 		
 		//std::cout << "ANGLE = " << angle << std::endl; // DEBUG
 		
-		if (angle > -45 && angle < 45)
+		/*if (angle > -45 && angle < 45)
 		{
 			return 2; // A is to the RIGHT of B
 		}
@@ -108,6 +108,23 @@ namespace PPM
 		else
 		{
 			return 1; // A is to the LEFT of B
-		}
+		}*/
+        
+        if (top_a < top_b && (angle > -150 && angle < -30))
+        {
+            return 4; // A above B
+        }
+        else if (bottom_a > bottom_b && (angle > 30 && angle < 150))
+        {
+            return 3; // A below B
+        }
+        else if (right_a > right_b && (angle > -60 && angle < 60))
+        {
+            return 2; // A right B
+        }
+        else if (left_a < left_b && (angle > 30 || angle < -30))
+        {
+            return 1; // A left B
+        }
 	}
 }

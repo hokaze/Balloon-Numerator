@@ -17,6 +17,7 @@ int main(int argc, char*argv[])
 	
 	// Load background image file
 	SDL_Texture *bgTex = loadTexture("img/background.png", rend);
+    SDL_Texture *bgTex2 = loadTexture("img/sunsetBackground.png", rend);
 	
 	// Event structure for handling input and rendering until closed
 	SDL_Event event;
@@ -37,6 +38,7 @@ int main(int argc, char*argv[])
     
 	// Create our main game objects
     vector<BaseObject*> objectList;
+    vector<BaseObject*> objectList2;
 	Balloonist* player = new Balloonist(rend);
 	Enemy1* foe = new Enemy1(rend);
     Platform* ground1 = new Platform(-10, 550, "img/platform1.png", rend);
@@ -45,6 +47,11 @@ int main(int argc, char*argv[])
     objectList.push_back(foe);
     objectList.push_back(ground1);
     objectList.push_back(ground2);
+    
+    // Subgame objects
+    Platform* ground3 = new Platform(-50, 550, "img/platform2.png", rend);
+    objectList2.push_back(player);
+    objectList2.push_back(ground3);
 	
 	cout << "Running..." << endl;
 	
@@ -58,6 +65,12 @@ int main(int argc, char*argv[])
             {
                 if (event.type == SDL_KEYDOWN)
                 {
+                    if (event.key.keysym.sym == SDLK_ESCAPE)
+                    {
+                        menu = false;
+                        level = -1;
+                        running = false;
+                    }
                     if (event.key.keysym.sym == SDLK_UP)
                     {
                         if (menuItem > 1) {menuItem--;}
@@ -75,15 +88,15 @@ int main(int argc, char*argv[])
                             level = 1;
                         }
                         // Educational level
-                        /*else if (menuItem == 2)
+                        else if (menuItem == 2)
                         {
                             menu = false;
                             level = 2;
-                        }*/
-                        // Display help
+                        }
+                        // Display high score
                         /*else if (menuItem == 3)
                         {
-                            // render help message and pause for user input here
+                            // high score popup?
                         }*/
                         // Quit game
                         else if (menuItem == 4)
@@ -129,6 +142,7 @@ int main(int argc, char*argv[])
         
         // MAIN GAME LOOP //
         
+        // Start Game
         while (level == 1)
         {
             while (SDL_PollEvent(&event))
@@ -138,6 +152,11 @@ int main(int argc, char*argv[])
                     running = false;
                     menu = false;
                     level = -1;
+                }
+                if (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_ESCAPE)
+                {
+                    menu = true;
+                    level = 0;
                 }
                 if (event.type == SDL_KEYDOWN || event.type == SDL_KEYUP)
                 {
@@ -212,6 +231,45 @@ int main(int argc, char*argv[])
             collide = 0;
             collide = checkCollision(player->collisionBox, ground2->collisionBox);
             if (collide) {player->bounce(collide);}
+        }
+        
+        // SUB GAME LOOP //
+        while (level == 2)
+        {
+            while (SDL_PollEvent(&event))
+            {
+                if (event.type == SDL_QUIT)
+                {
+                    running = false;
+                    menu = false;
+                    level = -1;
+                }
+                if (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_ESCAPE)
+                {
+                    menu = true;
+                    level = 0;
+                }
+                if (event.type == SDL_KEYDOWN || event.type == SDL_KEYUP)
+                {
+                    player->move(event);
+                }
+            }
+            
+            // Clear renderer, copy texture to it and display
+            SDL_RenderClear(rend);
+            renderTexture(bgTex2, rend, 0, 0);
+            for (int i = 0; i < objectList2.size(); ++i)
+            {
+                objectList2.at(i)->update(rend);
+            }
+            SDL_RenderPresent(rend);
+            
+            // Player collisions
+            for (int i = 1; i < objectList2.size(); ++i)
+            {
+                collide = checkCollision(player->collisionBox, objectList2.at(i)->collisionBox);
+                if (collide) {player->bounce(collide);}
+            }
         }
     }
 	
