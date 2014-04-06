@@ -20,6 +20,7 @@ namespace PPM
 		public:
 			// POLY //SDL_Rect collisionBox; // placed in public temporarily to test collision
 			Balloonist(SDL_Renderer *r);
+            Balloonist(int x, int y, SDL_Renderer *r);
 			Balloonist(int x, int y, int starting_balloons, int starting_lives, std::string image_file, SDL_Renderer *r);
 			~Balloonist();
 			//void move(bool direction); // final move is just left/right

@@ -8,6 +8,7 @@ namespace PPM
         collisionBox.y = 260;
         sprite = loadTexture("img/error.png", r);
         SDL_QueryTexture(sprite, NULL, NULL, &collisionBox.w, &collisionBox.h);
+        type = "BaseObject";
     }
     
     BaseObject::BaseObject(int x, int y, std::string image_file, SDL_Renderer *r) 
@@ -16,6 +17,7 @@ namespace PPM
         collisionBox.y = y;
         sprite = loadTexture(image_file, r);
         SDL_QueryTexture(sprite, NULL, NULL, &collisionBox.w, &collisionBox.h);
+        type = "BaseObject";
     }
     
     BaseObject::~BaseObject()
@@ -27,5 +29,10 @@ namespace PPM
     {
         // Draw to screen
         renderTexture(sprite, r, collisionBox.x, collisionBox.y);
+    }
+    
+    std::string BaseObject::getType()
+    {
+        return type;
     }
 }

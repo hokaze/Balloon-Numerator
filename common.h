@@ -22,5 +22,6 @@
 #include <iostream> // DEBUG
 #include <stdlib.h> // needed for srand, rand
 #include <time.h>
+#include <fstream>
 
 #endif

@@ -15,7 +15,24 @@ namespace PPM
         sprite0 = loadTexture("img/enemy/0balloon.png", r);
         sprite = sprite2;
 		SDL_QueryTexture(sprite, NULL, NULL, &collisionBox.w, &collisionBox.h);
+        type = "Enemy1";
 	}
+	
+    Enemy1::Enemy1(int x, int y, SDL_Renderer *r) : BaseObject(r)
+    {
+        collisionBox.x = x;
+        collisionBox.y = y;
+        balloons = 2;
+        grounded = false;
+        alive = true;
+        facingRight = false;
+        sprite2 = loadTexture("img/enemy/2balloons.png", r);
+        sprite1 = loadTexture("img/enemy/1balloon.png", r);
+        sprite0 = loadTexture("img/enemy/0balloon.png", r);
+        sprite = sprite2;
+        SDL_QueryTexture(sprite, NULL, NULL, &collisionBox.w, &collisionBox.h);
+        type = "Enemy1";
+    }
 	
 	Enemy1::~Enemy1()
 	{

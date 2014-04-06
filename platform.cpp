@@ -8,6 +8,7 @@ namespace PPM
         collisionBox.y = 250;
         sprite = loadTexture("img/platform1.png", r);
         SDL_QueryTexture(sprite, NULL, NULL, &collisionBox.w, &collisionBox.h);
+        type = "Platform";
     }
     
     Platform::Platform(int x, int y, std::string image_file, SDL_Renderer *r) : BaseObject(x, y, image_file, r) 
@@ -16,6 +17,7 @@ namespace PPM
         collisionBox.y = y;
         sprite = loadTexture(image_file, r);
         SDL_QueryTexture(sprite, NULL, NULL, &collisionBox.w, &collisionBox.h);
+        type = "Platform";
     }
     
     Platform::~Platform()

@@ -40,17 +40,62 @@ int main(int argc, char*argv[])
     
 	// Create our main game objects
     vector<BaseObject*> objectList;
-    vector<BaseObject*> objectList2;
-	Balloonist* player = new Balloonist(rend);
-	Enemy1* foe = new Enemy1(rend);
+    vector<Enemy1*> enemyList;
+    vector<Platform*> groundList;
+    Balloonist* player = new Balloonist(50, 50, rend);
+    objectList.push_back(player);
+    Enemy1* enemy;
+    
+    // EXPERIMENTAL LEVEL LOADER
+    string value1, value2, value3, value4;
+    void *object;
+    ifstream levelFile("levels/main1.txt");
+    while (levelFile.good())
+    {
+        getline(levelFile, value1, ',');
+        /*if (value1 == "player")
+        {
+            getline(levelFile, value2, ',');
+            getline(levelFile, value3, ',');
+            object = new Balloonist(stoi(value2), stoi(value3), rend);
+            objectList.push_back(static_cast<Balloonist*>(object));
+            getline(levelFile, value1);
+        }*/
+        if (value1 == "enemy1")
+        {
+            getline(levelFile, value2, ',');
+            getline(levelFile, value3, ',');
+            object = new Enemy1(stoi(value2), stoi(value3), rend);
+            objectList.push_back(static_cast<Enemy1*>(object));
+            enemyList.push_back(static_cast<Enemy1*>(object));
+            getline(levelFile, value1);
+        }
+        else if (value1 == "ground")
+        {
+            getline(levelFile, value2, ',');
+            getline(levelFile, value3, ',');
+            getline(levelFile, value4, ',');
+            object = new Platform(stoi(value2), stoi(value3), value4, rend);
+            objectList.push_back(static_cast<Platform*>(object));
+            groundList.push_back(static_cast<Platform*>(object));
+            getline(levelFile, value1);
+        }
+        else
+        {
+            getline(levelFile, value1);
+        }
+    }
+    
+    // OLD LEVEL 1 SETUP
+	/*Enemy1* foe = new Enemy1(550, 350, rend);
     Platform* ground1 = new Platform(-10, 550, "img/platform1.png", rend);
     Platform* ground2 = new Platform(660, 550, "img/platform1.png", rend);
-    objectList.push_back(player);
     objectList.push_back(foe);
     objectList.push_back(ground1);
-    objectList.push_back(ground2);
+    objectList.push_back(ground2);*/
     
     // Subgame objects
+    /*vector<BaseObject*> objectList2;
     SDL_Color colourWhite = {255, 255, 255};
     SDL_Texture *questionText = renderText("What is 84 split in half?", "Roboto.ttf", colourWhite, 30, rend);
     SDL_Texture *correctText = renderText("Well done, that's right!", "Roboto.ttf", colourWhite, 30, rend);
@@ -73,7 +118,7 @@ int main(int argc, char*argv[])
     objectList2.push_back(ground4);
     objectList2.push_back(ground5);
     objectList2.push_back(ground6);
-    objectList2.push_back(ground7);
+    objectList2.push_back(ground7);*/
 	
 	cout << "Running..." << endl;
 	
@@ -185,10 +230,51 @@ int main(int argc, char*argv[])
                     player->move(event);
                 }
             }
-            if (foe->isAlive())
+            
+            // Enemy movement and collisions
+            for (int i = 0; i < enemyList.size(); ++i)
             {
-                foe->move();
+                if (enemyList.at(i)->isAlive())
+                {
+                    enemyList.at(i)->move();
+                }
+                collide = checkCollision(player->collisionBox, enemyList.at(i)->collisionBox);
+                enemyCollide = 0;
+                if (collide)
+                {
+                    if (collide == 1)
+                    {
+                        enemyCollide = 2;
+                    }
+                    else if (collide == 2)
+                    {
+                        enemyCollide = 1;
+                    }
+                    else if (collide == 3)
+                    {
+                        enemyCollide = 4;
+                        player->pop(1);
+                    }
+                    else
+                    {
+                        enemyCollide = 3;
+                        enemyList.at(i)->pop(1);
+                    }
+                    player->bounce(collide);
+                    enemyList.at(i)->bounce(enemyCollide);
+                }
+                // Enemy - Ground bouncing
+                for (int j = 0; j < groundList.size(); ++j)
+                {
+                    enemyCollide = 0;
+                    enemyCollide = checkCollision(enemyList.at(i)->collisionBox, groundList.at(j)->collisionBox);
+                    if (enemyCollide) {enemyList.at(i)->bounce(enemyCollide);}
+                }
             }
+            //if (foe->isAlive())
+            //{
+            //    foe->move();
+            //}
             
             // Clear renderer, copy texture to it and display
             SDL_RenderClear(rend);
@@ -204,7 +290,7 @@ int main(int argc, char*argv[])
             SDL_RenderPresent(rend);
             
             // Check collisions between player and enemy
-            if (foe->isAlive())
+            /*if (foe->isAlive())
             {
                 collide = checkCollision(player->collisionBox, foe->collisionBox);
                 enemyCollide = 0;
@@ -246,17 +332,25 @@ int main(int argc, char*argv[])
                 if (enemyCollide) {foe->bounce(enemyCollide);}
             }
             
-            // Player - Ground bouncing
+            // Player - Ground bouncing OLD
             collide = 0;
             collide = checkCollision(player->collisionBox, ground1->collisionBox);
             if (collide) {player->bounce(collide);}
             collide = 0;
             collide = checkCollision(player->collisionBox, ground2->collisionBox);
-            if (collide) {player->bounce(collide);}
+            if (collide) {player->bounce(collide);}*/
+            
+            // Player - Ground bouncing
+            for (int j = 0; j < groundList.size(); ++j)
+            {
+                collide = 0;
+                collide = checkCollision(player->collisionBox, groundList.at(j)->collisionBox);
+                if (collide) {player->bounce(collide);}
+            }   
         }
         
         // SUB GAME LOOP //
-        while (level == 2)
+        /*while (level == 2)
         {
             while (SDL_PollEvent(&event))
             {
@@ -306,7 +400,7 @@ int main(int argc, char*argv[])
                     }
                 }
             }
-        }
+        }*/
     }
 	
 	// Clean up objects and safely close SDL

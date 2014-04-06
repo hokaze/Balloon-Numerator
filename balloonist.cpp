@@ -19,7 +19,28 @@ namespace PPM
         sprite0 = loadTexture("img/player/0balloon.png", r);
         sprite = sprite2;
 		SDL_QueryTexture(sprite, NULL, NULL, &collisionBox.w, &collisionBox.h);
+        type = "Balloonist";
 	}
+	
+    Balloonist::Balloonist(int x, int y, SDL_Renderer *r) : Enemy1(r)
+    {
+        collisionBox.x = x;
+        collisionBox.y = y;
+        x_speed = 0;
+        y_speed = 0.01;
+        balloons = 2;
+        lives = 3;
+        score = 0;
+        grounded = false;
+        alive = true;
+        facingRight = true;
+        sprite2 = loadTexture("img/player/2balloons.png", r);
+        sprite1 = loadTexture("img/player/1balloon.png", r);
+        sprite0 = loadTexture("img/player/0balloon.png", r);
+        sprite = sprite2;
+        SDL_QueryTexture(sprite, NULL, NULL, &collisionBox.w, &collisionBox.h);
+        type = "Balloonist";
+    }
 	
 	Balloonist::Balloonist(int x, int y, int starting_balloons, int starting_lives, std::string image_file, SDL_Renderer *r) : Enemy1(r)
 	{
@@ -33,6 +54,7 @@ namespace PPM
 		facingRight = true;
 		sprite = loadTexture(image_file, r);
 		SDL_QueryTexture(sprite, NULL, NULL, &collisionBox.w, &collisionBox.h);
+        type = "Balloonist";
 	}
 	
 	Balloonist::~Balloonist()

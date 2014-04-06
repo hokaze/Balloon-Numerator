@@ -8,6 +8,7 @@ namespace PPM
     {
         protected:
             SDL_Texture *sprite;
+            std::string type;
         public:
             SDL_Rect collisionBox;
             BaseObject();
@@ -15,6 +16,7 @@ namespace PPM
             BaseObject(int x, int y, std::string image_file, SDL_Renderer *r);
             ~BaseObject();
             virtual void update(SDL_Renderer *r);
+            std::string getType();
     };
 }
 

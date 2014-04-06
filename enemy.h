@@ -23,6 +23,7 @@ namespace PPM
 		public:
 			// POLY //SDL_Rect collisionBox; // placed in public temporarily to test collision
 			Enemy1(SDL_Renderer *r);
+            Enemy1(int x, int y, SDL_Renderer *r);
 			~Enemy1();
 			//void move(bool direction);
 			void move();
