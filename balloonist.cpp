@@ -4,8 +4,10 @@ namespace PPM
 {
 	Balloonist::Balloonist(SDL_Renderer *r) : Enemy1(r)
 	{
-		collisionBox.x = 50;
-		collisionBox.y = 50;
+        startx = 50;
+        starty = 50;
+		collisionBox.x = startx;
+		collisionBox.y = starty;
 		x_speed = 0;
 		y_speed = 0.01;
 		balloons = 2;
@@ -24,8 +26,10 @@ namespace PPM
 	
     Balloonist::Balloonist(int x, int y, SDL_Renderer *r) : Enemy1(r)
     {
-        collisionBox.x = x;
-        collisionBox.y = y;
+        startx = x;
+        starty = y;
+        collisionBox.x = startx;
+        collisionBox.y = starty;
         x_speed = 0;
         y_speed = 0.01;
         balloons = 2;
@@ -138,4 +142,12 @@ namespace PPM
 			renderTexture(sprite, r, collisionBox.x - SCREEN_WIDTH, collisionBox.y, facingRight);
 		}
 	}
+	
+	void Balloonist::reset()
+    {
+        collisionBox.x = startx;
+        collisionBox.y = starty;
+        x_speed = 0;
+        y_speed = 0;
+    }
 }

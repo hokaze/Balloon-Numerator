@@ -7,7 +7,7 @@ namespace PPM
 {
 	class Balloonist : public Enemy1
 	{
-		//protected:
+		protected:
 			// Example values - currently don't do anything
 			//const int run_speed = 2, float_speed = 1;
 			//const float fall_accel = 0.1, ascend_accel = 0.05;
@@ -18,6 +18,7 @@ namespace PPM
 			// POLY //SDL_Texture *sprite;
 			//SDL_Rect collisionBox; // restore this when collision works properly
 		public:
+            int startx, starty;
 			// POLY //SDL_Rect collisionBox; // placed in public temporarily to test collision
 			Balloonist(SDL_Renderer *r);
             Balloonist(int x, int y, SDL_Renderer *r);
@@ -30,6 +31,7 @@ namespace PPM
 			// POLY //void flap();
 			//void kick(Enemy foe);
 			//void stomp(Enemy foe);
+            void reset();
 			virtual void update(SDL_Renderer *r);
 	};
 }
