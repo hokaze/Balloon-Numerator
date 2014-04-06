@@ -20,6 +20,15 @@ namespace PPM
         type = "BaseObject";
     }
     
+    BaseObject::BaseObject(int x, int y, SDL_Texture *tex, std::string oddType, SDL_Renderer *r)
+    {
+        collisionBox.x = x;
+        collisionBox.y = y;
+        sprite = tex;
+        SDL_QueryTexture(sprite, NULL, NULL, &collisionBox.w, &collisionBox.h);
+        type = oddType;
+    }
+    
     BaseObject::~BaseObject()
     {
         SDL_DestroyTexture(sprite);

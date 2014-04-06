@@ -1,0 +1,10 @@
+player;50;50;
+textDisplay;250;10;What is 84 split in half?;Roboto.ttf;white;30;
+numberBalloon;700;200;img/numberBalloon.png;42;Roboto.ttf;white;18;1;
+numberBalloon;400;300;img/numberBalloon.png;34;Roboto.ttf;white;18;0;
+ground;-10;550;img/platform1.png;
+ground;140;550;img/platform1.png;
+ground;290;550;img/platform1.png;
+ground;440;550;img/platform1.png;
+ground;590;550;img/platform1.png;
+ground;730;550;img/platform1.png;

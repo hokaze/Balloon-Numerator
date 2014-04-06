@@ -60,8 +60,8 @@ namespace PPM
     void Enemy1::pop(int damage)
     {
         int ticksPassed = damageClock.restart();
-        // Only take damage if not damaged yet or it's been 60 ticks (should be about 1 second)
-        if (ticksPassed == 0 || ticksPassed > 60)
+        // Only take damage if not damaged yet or it's been 1000 ticks (should be about 1 second)
+        if (ticksPassed == 0 || ticksPassed > 1000)
         {
             balloons -= damage;
             if (balloons == 2) {sprite = sprite2;}

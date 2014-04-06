@@ -3,6 +3,8 @@
 #include "balloonist.h"
 #include "enemy.h"
 #include "platform.h"
+#include "numberBalloon.h"
+#include "textDisplay.h"
 using namespace std;
 using namespace PPM;
 
@@ -61,30 +63,28 @@ int main(int argc, char*argv[])
     }
     
     // Subgame objects
-    vector<BaseObject*> objectList2;
-    SDL_Color colourWhite = {255, 255, 255};
-    /*SDL_Texture *questionText = renderText("What is 84 split in half?", "Roboto.ttf", colourWhite, 30, rend);
-    SDL_Texture *correctText = renderText("Well done, that's right!", "Roboto.ttf", colourWhite, 30, rend);
-    SDL_Texture *wrongText = renderText("Sorry, that's not right", "Roboto.ttf", colourWhite, 30, rend);
-    SDL_Texture *currentText = questionText;
-    BaseObject* balloon42 = new BaseObject(700, 200, "img/numberBalloon.png", rend);
-    BaseObject* balloon34 = new BaseObject(400, 300, "img/numberBalloon.png", rend);
-    SDL_Texture *text42 = renderText("42", "Roboto.ttf", colourWhite, 18, rend);
-    SDL_Texture *text34 = renderText("34", "Roboto.ttf", colourWhite, 18, rend);
-    Platform* ground3 = new Platform(140, 550, "img/platform1.png", rend);
-    Platform* ground4 = new Platform(290, 550, "img/platform1.png", rend);
-    Platform* ground5 = new Platform(440, 550, "img/platform1.png", rend);
-    Platform* ground6 = new Platform(590, 550, "img/platform1.png", rend);
-    Platform* ground7 = new Platform(730, 550, "img/platform1.png", rend);
+    vector<BaseObject*> objectList2 = loadLevel(player, "levels/sub1.txt", rend);
     objectList2.push_back(player);
-    objectList2.push_back(balloon42);
-    objectList2.push_back(balloon34);
-    objectList2.push_back(ground1);
-    objectList2.push_back(ground3);
-    objectList2.push_back(ground4);
-    objectList2.push_back(ground5);
-    objectList2.push_back(ground6);
-    objectList2.push_back(ground7);*/
+    vector<NumberBalloon*> numberList2;
+    vector<Platform*> groundList2;
+    TextDisplay* message;
+    
+    // Populate subgame sublists
+    for (int i = 0; i < objectList2.size(); ++i)
+    {
+        if (objectList2.at(i)->getType() == "NumberBalloon")
+        {
+            numberList2.push_back(dynamic_cast<NumberBalloon*>(objectList2.at(i)));
+        }
+        else if (objectList2.at(i)->getType() == "Platform")
+        {
+            groundList2.push_back(dynamic_cast<Platform*>(objectList2.at(i)));
+        }
+        else if (objectList2.at(i)->getType() == "TextDisplay")
+        {
+            message = dynamic_cast<TextDisplay*>(objectList2.at(i));
+        }
+    }
 	
 	cout << "Running..." << endl;
 	
@@ -257,7 +257,7 @@ int main(int argc, char*argv[])
         }
         
         // SUB GAME LOOP //
-        /*while (level == 2)
+        while (level == 2)
         {
             while (SDL_PollEvent(&event))
             {
@@ -285,29 +285,34 @@ int main(int argc, char*argv[])
             {
                 objectList2.at(i)->update(rend);
             }
-            renderTexture(currentText, rend, 250, 10);
-            renderTexture(text42, rend, 705, 205);
-            renderTexture(text34, rend, 405, 305);
             SDL_RenderPresent(rend);
             
-            // Player collisions
-            for (int i = 1; i < objectList2.size(); ++i)
+            // Player - Ground bouncing
+            for (int j = 0; j < groundList2.size(); ++j)
             {
-                collide = checkCollision(player->collisionBox, objectList2.at(i)->collisionBox);
+                collide = 0;
+                collide = checkCollision(player->collisionBox, groundList2.at(j)->collisionBox);
+                if (collide) {player->bounce(collide);}
+            }
+            
+            // Player - Balloon collisions
+            for (int i = 0; i < numberList2.size(); ++i)
+            {
+                collide = checkCollision(player->collisionBox, numberList2.at(i)->collisionBox);
                 if (collide)
                 {
                     player->bounce(collide);
-                    if (objectList2.at(i) == balloon42)
+                    if (numberList2.at(i)->check())
                     {
-                        currentText = correctText;
+                        message->setRight();
                     }
-                    else if (objectList2.at(i) == balloon34)
+                    else
                     {
-                        currentText = wrongText;
+                        message->setWrong();
                     }
                 }
             }
-        }*/
+        }
     }
 	
 	// Clean up objects and safely close SDL
@@ -323,16 +328,17 @@ int main(int argc, char*argv[])
 vector<BaseObject*> loadLevel(Balloonist* player, string filename, SDL_Renderer *r)
 {
     vector <BaseObject*> levelContains;
-    string value1, value2, value3, value4;
+    string value1, value2, value3, value4, value5, value6, value7, value8, value9;
+    SDL_Color colour;
     void *object;
     ifstream levelFile(filename);
     while (levelFile.good())
     {
-        getline(levelFile, value1, ',');
+        getline(levelFile, value1, ';');
         if (value1 == "player")
         {
-            getline(levelFile, value2, ',');
-            getline(levelFile, value3, ',');
+            getline(levelFile, value2, ';');
+            getline(levelFile, value3, ';');
             player->startx = stoi(value2);
             player->starty = stoi(value3);
             player->reset();
@@ -340,19 +346,47 @@ vector<BaseObject*> loadLevel(Balloonist* player, string filename, SDL_Renderer 
         }
         else if (value1 == "enemy1")
         {
-            getline(levelFile, value2, ',');
-            getline(levelFile, value3, ',');
+            getline(levelFile, value2, ';');
+            getline(levelFile, value3, ';');
             object = new Enemy1(stoi(value2), stoi(value3), r);
             levelContains.push_back(static_cast<Enemy1*>(object));
             getline(levelFile, value1);
         }
         else if (value1 == "ground")
         {
-            getline(levelFile, value2, ',');
-            getline(levelFile, value3, ',');
-            getline(levelFile, value4, ',');
+            getline(levelFile, value2, ';');
+            getline(levelFile, value3, ';');
+            getline(levelFile, value4, ';');
             object = new Platform(stoi(value2), stoi(value3), value4, r);
             levelContains.push_back(static_cast<Platform*>(object));
+            getline(levelFile, value1);
+        }
+        else if (value1 == "numberBalloon")
+        {
+            getline(levelFile, value2, ';');
+            getline(levelFile, value3, ';');
+            getline(levelFile, value4, ';');
+            getline(levelFile, value5, ';');
+            getline(levelFile, value6, ';');
+            getline(levelFile, value7, ';');
+            getline(levelFile, value8, ';');
+            getline(levelFile, value9, ';');
+            if (value7 == "white") {colour = {255,255,255};}
+            object = new NumberBalloon(stoi(value2), stoi(value3), value4, value5, value6, colour, stoi(value8), stoi(value9), r);
+            levelContains.push_back(static_cast<NumberBalloon*>(object));
+            getline(levelFile, value1);
+        }
+        else if (value1 == "textDisplay")
+        {
+            getline(levelFile, value2, ';');
+            getline(levelFile, value3, ';');
+            getline(levelFile, value4, ';');
+            getline(levelFile, value5, ';');
+            getline(levelFile, value6, ';');
+            getline(levelFile, value7, ';');
+            if (value6 == "white") {colour = {255,255,255};}
+            object = new TextDisplay(stoi(value2), stoi(value3), value4, value5, colour, stoi(value7), r);
+            levelContains.push_back(static_cast<TextDisplay*>(object));
             getline(levelFile, value1);
         }
         else
