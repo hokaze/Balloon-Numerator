@@ -140,5 +140,7 @@ namespace PPM
         {
             return 1; // A left B
         }
+
+		return 5;
 	}
 }

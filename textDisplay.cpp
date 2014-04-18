@@ -7,9 +7,9 @@ namespace PPM
         collisionBox.x = 250;
         collisionBox.y = 10;
         state = 0;
-        questionText = renderText("Is this a placeholder?", "Roboto.ttf", {255,255,255}, 30, r);
-        correctText = renderText("But of course!", "Roboto.ttf", {255,255,255}, 30, r);
-        wrongText = renderText("Nope...", "Roboto.ttf", {255,255,255}, 30, r);
+        questionText = renderText("Is this a placeholder?", "Roboto.ttf", WHITE, 30, r);
+        correctText = renderText("But of course!", "Roboto.ttf", WHITE, 30, r);
+        wrongText = renderText("Nope...", "Roboto.ttf", WHITE, 30, r);
         sprite = questionText;
         collisionBox.h = 0; collisionBox.w = 0;
         type = "TextDisplay";

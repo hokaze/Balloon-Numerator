@@ -15,7 +15,7 @@ int main(int argc, char*argv[])
 	// Initialise SDL video, event, audio, timer, joystick, controller, etc subsystems
 	SDL_Init(SDL_INIT_EVERYTHING);
 	// Create window to draw to, failure results in NULL
-	SDL_Window *window = SDL_CreateWindow("Balloon Numerator", 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
+	SDL_Window *window = SDL_CreateWindow("Balloon Numerator", 50, 50, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
 	// Create 2D renderer for window with default driver, graphics acceleration and current refresh rate
 	SDL_Renderer *rend = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
 	// Load TTF support
@@ -50,7 +50,7 @@ int main(int argc, char*argv[])
     vector<Platform*> groundList;
     
     // Populate sublists
-    for (int i = 0; i < objectList.size(); ++i)
+    for (unsigned int i = 0; i < objectList.size(); ++i)
     {
         if (objectList.at(i)->getType() == "Enemy1")
         {
@@ -67,10 +67,10 @@ int main(int argc, char*argv[])
     objectList2.push_back(player);
     vector<NumberBalloon*> numberList2;
     vector<Platform*> groundList2;
-    TextDisplay* message;
+    TextDisplay* message = nullptr;
     
     // Populate subgame sublists
-    for (int i = 0; i < objectList2.size(); ++i)
+    for (unsigned int i = 0; i < objectList2.size(); ++i)
     {
         if (objectList2.at(i)->getType() == "NumberBalloon")
         {
@@ -198,7 +198,7 @@ int main(int argc, char*argv[])
             }
             
             // Enemy movement and collisions
-            for (int i = 0; i < enemyList.size(); ++i)
+            for (unsigned int i = 0; i < enemyList.size(); ++i)
             {
                 if (enemyList.at(i)->isAlive())
                 {
@@ -230,7 +230,7 @@ int main(int argc, char*argv[])
                     enemyList.at(i)->bounce(enemyCollide);
                 }
                 // Enemy - Ground bouncing
-                for (int j = 0; j < groundList.size(); ++j)
+                for (unsigned int j = 0; j < groundList.size(); ++j)
                 {
                     enemyCollide = 0;
                     enemyCollide = checkCollision(enemyList.at(i)->collisionBox, groundList.at(j)->collisionBox);
@@ -241,14 +241,14 @@ int main(int argc, char*argv[])
             // Clear renderer, copy texture to it and display
             SDL_RenderClear(rend);
             renderTexture(bgTex, rend, 0, 0);
-            for (int i = 0; i < objectList.size(); ++i)
+            for (unsigned int i = 0; i < objectList.size(); ++i)
             {
                 objectList.at(i)->update(rend);
             }
             SDL_RenderPresent(rend);
             
             // Player - Ground bouncing
-            for (int j = 0; j < groundList.size(); ++j)
+            for (unsigned int j = 0; j < groundList.size(); ++j)
             {
                 collide = 0;
                 collide = checkCollision(player->collisionBox, groundList.at(j)->collisionBox);
@@ -281,14 +281,14 @@ int main(int argc, char*argv[])
             // Clear renderer, copy texture to it and display
             SDL_RenderClear(rend);
             renderTexture(bgTex2, rend, 0, 0);
-            for (int i = 0; i < objectList2.size(); ++i)
+            for (unsigned int i = 0; i < objectList2.size(); ++i)
             {
                 objectList2.at(i)->update(rend);
             }
             SDL_RenderPresent(rend);
             
             // Player - Ground bouncing
-            for (int j = 0; j < groundList2.size(); ++j)
+            for (unsigned int j = 0; j < groundList2.size(); ++j)
             {
                 collide = 0;
                 collide = checkCollision(player->collisionBox, groundList2.at(j)->collisionBox);
@@ -296,7 +296,7 @@ int main(int argc, char*argv[])
             }
             
             // Player - Balloon collisions
-            for (int i = 0; i < numberList2.size(); ++i)
+            for (unsigned int i = 0; i < numberList2.size(); ++i)
             {
                 collide = checkCollision(player->collisionBox, numberList2.at(i)->collisionBox);
                 if (collide)
@@ -371,8 +371,8 @@ vector<BaseObject*> loadLevel(Balloonist* player, string filename, SDL_Renderer 
             getline(levelFile, value7, ';');
             getline(levelFile, value8, ';');
             getline(levelFile, value9, ';');
-            if (value7 == "white") {colour = {255,255,255};}
-            object = new NumberBalloon(stoi(value2), stoi(value3), value4, value5, value6, colour, stoi(value8), stoi(value9), r);
+            if (value7 == "white") {colour = WHITE;}
+            object = new NumberBalloon(stoi(value2), stoi(value3), value4, value5, value6, colour, stoi(value8), !!stoi(value9), r);
             levelContains.push_back(static_cast<NumberBalloon*>(object));
             getline(levelFile, value1);
         }
@@ -384,7 +384,7 @@ vector<BaseObject*> loadLevel(Balloonist* player, string filename, SDL_Renderer 
             getline(levelFile, value5, ';');
             getline(levelFile, value6, ';');
             getline(levelFile, value7, ';');
-            if (value6 == "white") {colour = {255,255,255};}
+            if (value6 == "white") {colour = WHITE;}
             object = new TextDisplay(stoi(value2), stoi(value3), value4, value5, colour, stoi(value7), r);
             levelContains.push_back(static_cast<TextDisplay*>(object));
             getline(levelFile, value1);

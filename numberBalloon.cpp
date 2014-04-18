@@ -9,7 +9,7 @@ namespace PPM
         value = 0;
         correct = 0;
         sprite = loadTexture("img/numberBalloon", r);
-        text = renderText("0", "Roboto.ttf", {255,255,255}, 18, r);
+        text = renderText("0", "Roboto.ttf", WHITE, 18, r);
         SDL_QueryTexture(sprite, NULL, NULL, &collisionBox.w, &collisionBox.h);
         type = "NumberBalloon";
     }
