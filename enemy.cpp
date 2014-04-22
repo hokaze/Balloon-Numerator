@@ -51,10 +51,10 @@ namespace PPM
 	
     void Enemy1::bounce(int direction)
     {
-        if (direction == 1) {x_speed -= 2;} // bounce left
-        else if (direction == 2) {x_speed += 2;} // bounce right
-        else if (direction == 3) {y_speed += 4;} // bounce down
-        else if (direction == 4) {y_speed -= 4;} // bounce up
+        if (direction == 1) {x_speed -= 1;} // bounce left
+        else if (direction == 2) {x_speed += 1;} // bounce right
+        else if (direction == 3) {y_speed += 3;} // bounce down
+        else if (direction == 4) {y_speed -= 3;} // bounce up
     }
     
     void Enemy1::pop(int damage)
@@ -111,7 +111,10 @@ namespace PPM
             }
             else
             {
-                alive = false;
+				if (collisionBox.y > SCREEN_HEIGHT + (collisionBox.h * 2))
+				{
+					alive = false;
+				}
             }
         }
         

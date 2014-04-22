@@ -149,5 +149,6 @@ namespace PPM
         collisionBox.y = starty;
         x_speed = 0;
         y_speed = 0;
+		balloons = 2;
     }
 }

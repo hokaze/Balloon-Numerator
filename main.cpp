@@ -1,14 +1,16 @@
 // Balloon game demo code
 
-#include "balloonist.h"
+/*#include "balloonist.h"
 #include "enemy.h"
 #include "platform.h"
 #include "numberBalloon.h"
-#include "textDisplay.h"
+#include "textDisplay.h"*/
+#include "level.h"
 using namespace std;
 using namespace PPM;
 
 vector<BaseObject*> loadLevel(Balloonist* player, string filename, SDL_Renderer *r);
+vector<vector<BaseObject*>> loadLevelMasterFile(Balloonist* player, string filename, SDL_Renderer *r);
 
 int main(int argc, char*argv[])
 {
@@ -21,9 +23,11 @@ int main(int argc, char*argv[])
 	// Load TTF support
     TTF_Init();
     
-	// Load background image file
+	// Load background image files
 	SDL_Texture *bgTex = loadTexture("img/background.png", rend);
     SDL_Texture *bgTex2 = loadTexture("img/sunsetBackground.png", rend);
+	SDL_Texture *loseLevelTex = loadTexture("img/lose.png", rend);
+	SDL_Texture *nextLevelTex = loadTexture("img/win.png", rend);
 	
 	// Event structure for handling input and rendering until closed
 	SDL_Event event;
@@ -40,27 +44,33 @@ int main(int argc, char*argv[])
     SDL_Texture *menuSelect = loadTexture("img/menuSelector.png", rend);
     int menuItem = 1;
     const int menuItemLast = 4;
-    int level = 0;
+	int lastLevel = 0;
+    int currentLevel = -3;
     
 	// Create our main game objects
     Balloonist* player = new Balloonist(50, 50, rend);
-    vector<BaseObject*> objectList = loadLevel(player, "levels/main1.txt", rend);
-    objectList.push_back(player);
-    vector<Enemy1*> enemyList;
-    vector<Platform*> groundList;
+	LevelList MasterList(player, "levels/levels.txt", rend);
+	//vector<vector<BaseObject*>> levelList = loadLevelMasterFile(player, "levels/levels.txt", rend);
+    //vector<BaseObject*> objectList = loadLevel(player, "levels/main1.txt", rend);
+	//vector<BaseObject*> objectList = levelList.at(0);
+    //objectList.push_back(player);
+    //vector<Enemy1*> enemyList;
+    //vector<Platform*> groundList;
+	//int enemyAliveCount = 0;
     
     // Populate sublists
-    for (unsigned int i = 0; i < objectList.size(); ++i)
+    /*for (unsigned int i = 0; i < objectList.size(); ++i)
     {
         if (objectList.at(i)->getType() == "Enemy1")
         {
             enemyList.push_back(dynamic_cast<Enemy1*>(objectList.at(i)));
+			enemyAliveCount++;
         }
         else if (objectList.at(i)->getType() == "Platform")
         {
             groundList.push_back(dynamic_cast<Platform*>(objectList.at(i)));
         }
-    }
+    }*/
     
     // Subgame objects
     vector<BaseObject*> objectList2 = loadLevel(player, "levels/sub1.txt", rend);
@@ -101,7 +111,7 @@ int main(int argc, char*argv[])
                     if (event.key.keysym.sym == SDLK_ESCAPE)
                     {
                         menu = false;
-                        level = -1;
+                        MasterList.currentLevel = -3;
                         running = false;
                     }
                     if (event.key.keysym.sym == SDLK_UP)
@@ -118,14 +128,16 @@ int main(int argc, char*argv[])
                         if (menuItem == 1)
                         {
                             menu = false;
-                            level = 1;
+							MasterList.setLevel(0);
+							MasterList.activeLevel->resetLevel();
+							MasterList.setLevel(0);
                         }
                         // Educational level
-                        else if (menuItem == 2)
+                        /*else if (menuItem == 2)
                         {
                             menu = false;
-                            level = 2;
-                        }
+                            currentLevel = 2;
+                        }*/
                         // Display high score
                         /*else if (menuItem == 3)
                         {
@@ -135,7 +147,7 @@ int main(int argc, char*argv[])
                         else if (menuItem == 4)
                         {
                             menu = false;
-                            level = -1;
+                            MasterList.currentLevel = -3;
                             running = false;
                         }
                     }
@@ -144,14 +156,14 @@ int main(int argc, char*argv[])
                 {
                     menu = false;
                     running = false;
-                    level = -1;
+                    currentLevel = -3;
                 }
             }
             
             // Clear renderer, copy texture to it and display
             SDL_RenderClear(rend);
             
-            // Render meny
+            // Render menu
             renderTexture(menuBG, rend, 0, 0);
             if (menuItem == 1)
             {
@@ -176,7 +188,7 @@ int main(int argc, char*argv[])
         // MAIN GAME LOOP //
         
         // Start Game
-        while (level == 1)
+        while (MasterList.currentLevel > -1)
         {
             while (SDL_PollEvent(&event))
             {
@@ -184,12 +196,12 @@ int main(int argc, char*argv[])
                 {
                     running = false;
                     menu = false;
-                    level = -1;
+                    MasterList.currentLevel = -3;
                 }
                 if (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_ESCAPE)
                 {
                     menu = true;
-                    level = 0;
+                    MasterList.currentLevel = -3;
                 }
                 if (event.type == SDL_KEYDOWN || event.type == SDL_KEYUP)
                 {
@@ -197,67 +209,121 @@ int main(int argc, char*argv[])
                 }
             }
             
-            // Enemy movement and collisions
-            for (unsigned int i = 0; i < enemyList.size(); ++i)
-            {
-                if (enemyList.at(i)->isAlive())
-                {
-                    enemyList.at(i)->move();
-                }
-                collide = checkCollision(player->collisionBox, enemyList.at(i)->collisionBox);
-                enemyCollide = 0;
-                if (collide)
-                {
-                    if (collide == 1)
-                    {
-                        enemyCollide = 2;
-                    }
-                    else if (collide == 2)
-                    {
-                        enemyCollide = 1;
-                    }
-                    else if (collide == 3)
-                    {
-                        enemyCollide = 4;
-                        player->pop(1);
-                    }
-                    else
-                    {
-                        enemyCollide = 3;
-                        enemyList.at(i)->pop(1);
-                    }
-                    player->bounce(collide);
-                    enemyList.at(i)->bounce(enemyCollide);
-                }
-                // Enemy - Ground bouncing
-                for (unsigned int j = 0; j < groundList.size(); ++j)
-                {
-                    enemyCollide = 0;
-                    enemyCollide = checkCollision(enemyList.at(i)->collisionBox, groundList.at(j)->collisionBox);
-                    if (enemyCollide) {enemyList.at(i)->bounce(enemyCollide);}
-                }
+			// IF REGULAR LEVEL
+			if (MasterList.educationLevel == 0)
+			{
+				// Enemy movement and collisions
+				for (unsigned int i = 0; i < MasterList.enemyList.size(); ++i)
+				{
+					if (MasterList.enemyList.at(i)->isAlive())
+					{
+						MasterList.enemyList.at(i)->move();
+					}
+					collide = checkCollision(player->collisionBox, MasterList.enemyList.at(i)->collisionBox);
+					enemyCollide = 0;
+					if (collide)
+					{
+						if (collide == 1)
+						{
+							enemyCollide = 2;
+						}
+						else if (collide == 2)
+						{
+							enemyCollide = 1;
+						}
+						else if (collide == 3)
+						{
+							enemyCollide = 4;
+							player->pop(1);
+						}
+						else
+						{
+							enemyCollide = 3;
+							MasterList.enemyList.at(i)->pop(1);
+						}
+						player->bounce(collide);
+						MasterList.enemyList.at(i)->bounce(enemyCollide);
+					}
+					// Enemy - Ground bouncing
+					for (unsigned int j = 0; j < MasterList.groundList.size(); ++j)
+					{
+						enemyCollide = 0;
+						enemyCollide = checkCollision(MasterList.enemyList.at(i)->collisionBox, MasterList.groundList.at(j)->collisionBox);
+						if (enemyCollide) {MasterList.enemyList.at(i)->bounce(enemyCollide);}
+					}
+				}
             }
             
             // Clear renderer, copy texture to it and display
             SDL_RenderClear(rend);
-            renderTexture(bgTex, rend, 0, 0);
-            for (unsigned int i = 0; i < objectList.size(); ++i)
+			if (MasterList.educationLevel) {renderTexture(bgTex2, rend, 0, 0);}
+			else {renderTexture(bgTex, rend, 0, 0);}
+            for (unsigned int i = 0; i < MasterList.objectList.size(); ++i)
             {
-                objectList.at(i)->update(rend);
+                MasterList.objectList.at(i)->update(rend);
             }
             SDL_RenderPresent(rend);
             
             // Player - Ground bouncing
-            for (unsigned int j = 0; j < groundList.size(); ++j)
+            for (unsigned int j = 0; j < MasterList.groundList.size(); ++j)
             {
                 collide = 0;
-                collide = checkCollision(player->collisionBox, groundList.at(j)->collisionBox);
+                collide = checkCollision(player->collisionBox, MasterList.groundList.at(j)->collisionBox);
                 if (collide) {player->bounce(collide);}
-            }   
+            }
+
+			// IF SUB LEVEL
+			if (MasterList.educationLevel == 1)
+			{
+				if (MasterList.eduCountdown == -1)
+				{
+					MasterList.setLevel(-1);
+				}
+				// Player - Balloon collisions
+				for (unsigned int i = 0; i < MasterList.numberList.size(); ++i)
+				{
+					collide = checkCollision(player->collisionBox, MasterList.numberList.at(i)->collisionBox);
+					if (collide)
+					{
+						player->bounce(collide);
+						if (MasterList.numberList.at(i)->check())
+						{
+							MasterList.message->setRight();
+							MasterList.eduCountdown = -1;
+						}
+						else
+						{
+							MasterList.message->setWrong();
+						}
+					}
+				}
+			}
+
+			// IF REGULAR LEVEL
+			if (MasterList.educationLevel == 0)
+			{
+				MasterList.enemyAliveCount = MasterList.enemyCount;
+				// Test if all enemies are dead, if so, next level
+				for (unsigned int k = 0; k < MasterList.enemyList.size(); ++k)
+				{
+					if (MasterList.enemyList.at(k)->isAlive() == false)
+					{
+						MasterList.enemyAliveCount--;
+					}
+				}
+
+				if (MasterList.enemyAliveCount < 1)
+				{
+					//MasterList.lastLevel = 1;
+					//MasterList.currentLevel = -1;
+					MasterList.enemyAliveCount = 0;
+					MasterList.setLevel(-1);
+				}
+			}
         }
         
         // SUB GAME LOOP //
-        while (level == 2)
+        /*while (currentLevel == 2)
         {
             while (SDL_PollEvent(&event))
             {
@@ -265,12 +331,12 @@ int main(int argc, char*argv[])
                 {
                     running = false;
                     menu = false;
-                    level = -1;
+                    currentLevel = -3;
                 }
                 if (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_ESCAPE)
                 {
                     menu = true;
-                    level = 0;
+                    currentLevel = -3;
                 }
                 if (event.type == SDL_KEYDOWN || event.type == SDL_KEYUP)
                 {
@@ -312,16 +378,67 @@ int main(int argc, char*argv[])
                     }
                 }
             }
-        }
+        }*/
+
+		// Between level popup/delay
+		while (MasterList.currentLevel == -1)
+		{
+			// Display "level complete" image, wait a few seconds (or poll keyboard input?)
+			// then load the next level after the delay (or any keypress)
+			renderTexture(nextLevelTex, rend, 0, 0);
+			SDL_RenderPresent(rend);
+			SDL_Delay(2000);
+			if (MasterList.lastLevel + 1 >= MasterList.totalLevels())
+			{
+				MasterList.setLevel(-3);
+				menu = true; // TEMPORARY, return to menu so game doesn't crash when we run out of levels to play
+			}
+			else
+			{
+				MasterList.currentLevel = MasterList.lastLevel;
+				MasterList.setLevel(MasterList.lastLevel + 1);
+			}
+		}
+
+		// Gameover popup/delay
+		while (MasterList.currentLevel == -2)
+		{
+			// Display "game over image", wait for input, then return to menu
+			renderTexture(loseLevelTex, rend, 0, 0);
+			SDL_RenderPresent(rend);
+			SDL_Delay(2000);
+			MasterList.currentLevel = -3;
+			MasterList.lastLevel = 0;
+			menu = 1;
+		}
     }
 	
 	// Clean up objects and safely close SDL
 	SDL_DestroyTexture(bgTex);
 	SDL_DestroyRenderer(rend);
 	SDL_DestroyWindow(window);
+	SDL_DestroyTexture(bgTex2);
 	SDL_Quit();
 	
 	return 0;
+}
+
+// EXPERIMENTAL LEVEL ORDER LOADER
+vector<vector<BaseObject*>> loadLevelMasterFile(Balloonist* player, string filename, SDL_Renderer *r)
+{
+	vector<vector<BaseObject*>> levelsContain;
+	string fileString, pathString;
+	string dirString = "levels/";
+	ifstream levelFile(filename);
+
+    while (levelFile.good())
+    {
+		getline(levelFile, fileString);
+		pathString = dirString + fileString;
+		levelsContain.push_back(loadLevel(player, pathString, r));
+	}
+
+	return levelsContain;
 }
 
 // EXPERIMENTAL LEVEL LOADER
@@ -341,7 +458,7 @@ vector<BaseObject*> loadLevel(Balloonist* player, string filename, SDL_Renderer 
             getline(levelFile, value3, ';');
             player->startx = stoi(value2);
             player->starty = stoi(value3);
-            player->reset();
+            //player->reset();
             getline(levelFile, value1);
         }
         else if (value1 == "enemy1")

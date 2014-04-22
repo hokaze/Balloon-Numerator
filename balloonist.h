@@ -18,7 +18,7 @@ namespace PPM
 			// POLY //SDL_Texture *sprite;
 			//SDL_Rect collisionBox; // restore this when collision works properly
 		public:
-            int startx, starty;
+			int startx, starty;
 			// POLY //SDL_Rect collisionBox; // placed in public temporarily to test collision
 			Balloonist(SDL_Renderer *r);
             Balloonist(int x, int y, SDL_Renderer *r);
