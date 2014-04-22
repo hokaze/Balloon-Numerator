@@ -18,18 +18,20 @@ namespace PPM
         type = "Enemy1";
 	}
 	
-    Enemy1::Enemy1(int x, int y, SDL_Renderer *r) : BaseObject(r)
+    Enemy1::Enemy1(int x, int y, int heliumSpheres, SDL_Renderer *r) : BaseObject(r)
     {
         collisionBox.x = x;
         collisionBox.y = y;
-        balloons = 2;
+        balloons = heliumSpheres;
         grounded = false;
         alive = true;
         facingRight = false;
         sprite2 = loadTexture("img/enemy/2balloons.png", r);
         sprite1 = loadTexture("img/enemy/1balloon.png", r);
         sprite0 = loadTexture("img/enemy/0balloon.png", r);
-        sprite = sprite2;
+		if (balloons == 2) {sprite = sprite2;}
+		else if (balloons == 1) {sprite = sprite1;}
+		else {sprite = sprite0;}
         SDL_QueryTexture(sprite, NULL, NULL, &collisionBox.w, &collisionBox.h);
         type = "Enemy1";
     }
@@ -77,6 +79,8 @@ namespace PPM
         {
             y_speed += 0.05;
         }
+
+		if (balloons < 1) {alive = 0;} // no balloons = no collision
         
         // Cap speeds
         if (x_speed > 4) {x_speed = 4;}
@@ -113,7 +117,7 @@ namespace PPM
             {
 				if (collisionBox.y > SCREEN_HEIGHT + (collisionBox.h * 2))
 				{
-					alive = false;
+					alive = -1;
 				}
             }
         }
@@ -129,7 +133,7 @@ namespace PPM
         }
 	}
 	
-	bool Enemy1::isAlive()
+	int Enemy1::isAlive()
     {
         return alive;
     }

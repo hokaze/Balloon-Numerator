@@ -1,4 +1,4 @@
 player;50;50;
-enemy1;550;350;
+enemy1;550;350;2;
 ground;-10;550;img/platform1.png;
 ground;660;550;img/platform1.png;

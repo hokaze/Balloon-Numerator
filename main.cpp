@@ -1,16 +1,8 @@
-// Balloon game demo code
+// Balloon Numerator //
 
-/*#include "balloonist.h"
-#include "enemy.h"
-#include "platform.h"
-#include "numberBalloon.h"
-#include "textDisplay.h"*/
 #include "level.h"
 using namespace std;
 using namespace PPM;
-
-vector<BaseObject*> loadLevel(Balloonist* player, string filename, SDL_Renderer *r);
-vector<vector<BaseObject*>> loadLevelMasterFile(Balloonist* player, string filename, SDL_Renderer *r);
 
 int main(int argc, char*argv[])
 {
@@ -44,58 +36,12 @@ int main(int argc, char*argv[])
     SDL_Texture *menuSelect = loadTexture("img/menuSelector.png", rend);
     int menuItem = 1;
     const int menuItemLast = 4;
-	int lastLevel = 0;
-    int currentLevel = -3;
+	bool loadNextLevel = 0;
     
 	// Create our main game objects
     Balloonist* player = new Balloonist(50, 50, rend);
 	LevelList MasterList(player, "levels/levels.txt", rend);
-	//vector<vector<BaseObject*>> levelList = loadLevelMasterFile(player, "levels/levels.txt", rend);
-    //vector<BaseObject*> objectList = loadLevel(player, "levels/main1.txt", rend);
-	//vector<BaseObject*> objectList = levelList.at(0);
-    //objectList.push_back(player);
-    //vector<Enemy1*> enemyList;
-    //vector<Platform*> groundList;
-	//int enemyAliveCount = 0;
-    
-    // Populate sublists
-    /*for (unsigned int i = 0; i < objectList.size(); ++i)
-    {
-        if (objectList.at(i)->getType() == "Enemy1")
-        {
-            enemyList.push_back(dynamic_cast<Enemy1*>(objectList.at(i)));
-			enemyAliveCount++;
-        }
-        else if (objectList.at(i)->getType() == "Platform")
-        {
-            groundList.push_back(dynamic_cast<Platform*>(objectList.at(i)));
-        }
-    }*/
-    
-    // Subgame objects
-    vector<BaseObject*> objectList2 = loadLevel(player, "levels/sub1.txt", rend);
-    objectList2.push_back(player);
-    vector<NumberBalloon*> numberList2;
-    vector<Platform*> groundList2;
-    TextDisplay* message = nullptr;
-    
-    // Populate subgame sublists
-    for (unsigned int i = 0; i < objectList2.size(); ++i)
-    {
-        if (objectList2.at(i)->getType() == "NumberBalloon")
-        {
-            numberList2.push_back(dynamic_cast<NumberBalloon*>(objectList2.at(i)));
-        }
-        else if (objectList2.at(i)->getType() == "Platform")
-        {
-            groundList2.push_back(dynamic_cast<Platform*>(objectList2.at(i)));
-        }
-        else if (objectList2.at(i)->getType() == "TextDisplay")
-        {
-            message = dynamic_cast<TextDisplay*>(objectList2.at(i));
-        }
-    }
-	
+
 	cout << "Running..." << endl;
 	
 	while (running)
@@ -156,7 +102,7 @@ int main(int argc, char*argv[])
                 {
                     menu = false;
                     running = false;
-                    currentLevel = -3;
+                    MasterList.currentLevel = -3;
                 }
             }
             
@@ -190,6 +136,7 @@ int main(int argc, char*argv[])
         // Start Game
         while (MasterList.currentLevel > -1)
         {
+			loadNextLevel = false;
             while (SDL_PollEvent(&event))
             {
                 if (event.type == SDL_QUIT)
@@ -215,41 +162,42 @@ int main(int argc, char*argv[])
 				// Enemy movement and collisions
 				for (unsigned int i = 0; i < MasterList.enemyList.size(); ++i)
 				{
-					if (MasterList.enemyList.at(i)->isAlive())
+					if (MasterList.enemyList.at(i)->isAlive() == 1)
 					{
 						MasterList.enemyList.at(i)->move();
-					}
-					collide = checkCollision(player->collisionBox, MasterList.enemyList.at(i)->collisionBox);
-					enemyCollide = 0;
-					if (collide)
-					{
-						if (collide == 1)
-						{
-							enemyCollide = 2;
-						}
-						else if (collide == 2)
-						{
-							enemyCollide = 1;
-						}
-						else if (collide == 3)
-						{
-							enemyCollide = 4;
-							player->pop(1);
-						}
-						else
-						{
-							enemyCollide = 3;
-							MasterList.enemyList.at(i)->pop(1);
-						}
-						player->bounce(collide);
-						MasterList.enemyList.at(i)->bounce(enemyCollide);
-					}
-					// Enemy - Ground bouncing
-					for (unsigned int j = 0; j < MasterList.groundList.size(); ++j)
-					{
+
+						collide = checkCollision(player->collisionBox, MasterList.enemyList.at(i)->collisionBox);
 						enemyCollide = 0;
-						enemyCollide = checkCollision(MasterList.enemyList.at(i)->collisionBox, MasterList.groundList.at(j)->collisionBox);
-						if (enemyCollide) {MasterList.enemyList.at(i)->bounce(enemyCollide);}
+						if (collide)
+						{
+							if (collide == 1)
+							{
+								enemyCollide = 2;
+							}
+							else if (collide == 2)
+							{
+								enemyCollide = 1;
+							}
+							else if (collide == 3)
+							{
+								enemyCollide = 4;
+								player->pop(1);
+							}
+							else
+							{
+								enemyCollide = 3;
+								MasterList.enemyList.at(i)->pop(1);
+							}
+							player->bounce(collide);
+							MasterList.enemyList.at(i)->bounce(enemyCollide);
+						}
+						// Enemy - Ground bouncing
+						for (unsigned int j = 0; j < MasterList.groundList.size(); ++j)
+						{
+							enemyCollide = 0;
+							enemyCollide = checkCollision(MasterList.enemyList.at(i)->collisionBox, MasterList.groundList.at(j)->collisionBox);
+							if (enemyCollide) {MasterList.enemyList.at(i)->bounce(enemyCollide);}
+						}
 					}
 				}
             }
@@ -277,7 +225,7 @@ int main(int argc, char*argv[])
 			{
 				if (MasterList.eduCountdown == -1)
 				{
-					MasterList.setLevel(-1);
+					loadNextLevel = true;
 				}
 				// Player - Balloon collisions
 				for (unsigned int i = 0; i < MasterList.numberList.size(); ++i)
@@ -306,7 +254,7 @@ int main(int argc, char*argv[])
 				// Test if all enemies are dead, if so, next level
 				for (unsigned int k = 0; k < MasterList.enemyList.size(); ++k)
 				{
-					if (MasterList.enemyList.at(k)->isAlive() == false)
+					if (MasterList.enemyList.at(k)->isAlive() == -1)
 					{
 						MasterList.enemyAliveCount--;
 					}
@@ -314,71 +262,16 @@ int main(int argc, char*argv[])
 
 				if (MasterList.enemyAliveCount < 1)
 				{
-					//MasterList.lastLevel = 1;
-					//MasterList.currentLevel = -1;
-					MasterList.enemyAliveCount = 0;
-					MasterList.setLevel(-1);
+					loadNextLevel = true;
 				}
 			}
+
+			if (loadNextLevel)
+			{
+				MasterList.lastLevel = MasterList.currentLevel;
+				MasterList.setLevel(-1);
+			}
         }
-        
-        // SUB GAME LOOP //
-        /*while (currentLevel == 2)
-        {
-            while (SDL_PollEvent(&event))
-            {
-                if (event.type == SDL_QUIT)
-                {
-                    running = false;
-                    menu = false;
-                    currentLevel = -3;
-                }
-                if (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_ESCAPE)
-                {
-                    menu = true;
-                    currentLevel = -3;
-                }
-                if (event.type == SDL_KEYDOWN || event.type == SDL_KEYUP)
-                {
-                    player->move(event);
-                }
-            }
-            
-            // Clear renderer, copy texture to it and display
-            SDL_RenderClear(rend);
-            renderTexture(bgTex2, rend, 0, 0);
-            for (unsigned int i = 0; i < objectList2.size(); ++i)
-            {
-                objectList2.at(i)->update(rend);
-            }
-            SDL_RenderPresent(rend);
-            
-            // Player - Ground bouncing
-            for (unsigned int j = 0; j < groundList2.size(); ++j)
-            {
-                collide = 0;
-                collide = checkCollision(player->collisionBox, groundList2.at(j)->collisionBox);
-                if (collide) {player->bounce(collide);}
-            }
-            
-            // Player - Balloon collisions
-            for (unsigned int i = 0; i < numberList2.size(); ++i)
-            {
-                collide = checkCollision(player->collisionBox, numberList2.at(i)->collisionBox);
-                if (collide)
-                {
-                    player->bounce(collide);
-                    if (numberList2.at(i)->check())
-                    {
-                        message->setRight();
-                    }
-                    else
-                    {
-                        message->setWrong();
-                    }
-                }
-            }
-        }*/
 
 		// Between level popup/delay
 		while (MasterList.currentLevel == -1)
@@ -418,99 +311,9 @@ int main(int argc, char*argv[])
 	SDL_DestroyRenderer(rend);
 	SDL_DestroyWindow(window);
 	SDL_DestroyTexture(bgTex2);
+	SDL_DestroyTexture(nextLevelTex);
+	SDL_DestroyTexture(loseLevelTex);
 	SDL_Quit();
 	
 	return 0;
-}
-
-// EXPERIMENTAL LEVEL ORDER LOADER
-vector<vector<BaseObject*>> loadLevelMasterFile(Balloonist* player, string filename, SDL_Renderer *r)
-{
-	vector<vector<BaseObject*>> levelsContain;
-	string fileString, pathString;
-	string dirString = "levels/";
-	ifstream levelFile(filename);
-
-    while (levelFile.good())
-    {
-		getline(levelFile, fileString);
-		pathString = dirString + fileString;
-		levelsContain.push_back(loadLevel(player, pathString, r));
-	}
-
-	return levelsContain;
-}
-
-// EXPERIMENTAL LEVEL LOADER
-vector<BaseObject*> loadLevel(Balloonist* player, string filename, SDL_Renderer *r)
-{
-    vector <BaseObject*> levelContains;
-    string value1, value2, value3, value4, value5, value6, value7, value8, value9;
-    SDL_Color colour;
-    void *object;
-    ifstream levelFile(filename);
-    while (levelFile.good())
-    {
-        getline(levelFile, value1, ';');
-        if (value1 == "player")
-        {
-            getline(levelFile, value2, ';');
-            getline(levelFile, value3, ';');
-            player->startx = stoi(value2);
-            player->starty = stoi(value3);
-            //player->reset();
-            getline(levelFile, value1);
-        }
-        else if (value1 == "enemy1")
-        {
-            getline(levelFile, value2, ';');
-            getline(levelFile, value3, ';');
-            object = new Enemy1(stoi(value2), stoi(value3), r);
-            levelContains.push_back(static_cast<Enemy1*>(object));
-            getline(levelFile, value1);
-        }
-        else if (value1 == "ground")
-        {
-            getline(levelFile, value2, ';');
-            getline(levelFile, value3, ';');
-            getline(levelFile, value4, ';');
-            object = new Platform(stoi(value2), stoi(value3), value4, r);
-            levelContains.push_back(static_cast<Platform*>(object));
-            getline(levelFile, value1);
-        }
-        else if (value1 == "numberBalloon")
-        {
-            getline(levelFile, value2, ';');
-            getline(levelFile, value3, ';');
-            getline(levelFile, value4, ';');
-            getline(levelFile, value5, ';');
-            getline(levelFile, value6, ';');
-            getline(levelFile, value7, ';');
-            getline(levelFile, value8, ';');
-            getline(levelFile, value9, ';');
-            if (value7 == "white") {colour = WHITE;}
-            object = new NumberBalloon(stoi(value2), stoi(value3), value4, value5, value6, colour, stoi(value8), !!stoi(value9), r);
-            levelContains.push_back(static_cast<NumberBalloon*>(object));
-            getline(levelFile, value1);
-        }
-        else if (value1 == "textDisplay")
-        {
-            getline(levelFile, value2, ';');
-            getline(levelFile, value3, ';');
-            getline(levelFile, value4, ';');
-            getline(levelFile, value5, ';');
-            getline(levelFile, value6, ';');
-            getline(levelFile, value7, ';');
-            if (value6 == "white") {colour = WHITE;}
-            object = new TextDisplay(stoi(value2), stoi(value3), value4, value5, colour, stoi(value7), r);
-            levelContains.push_back(static_cast<TextDisplay*>(object));
-            getline(levelFile, value1);
-        }
-        else
-        {
-            getline(levelFile, value1);
-        }
-    }
-    
-    return levelContains;
 }

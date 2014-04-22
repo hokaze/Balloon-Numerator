@@ -56,7 +56,8 @@ namespace PPM
 			{
 				getline(levelFile, value2, ';');
 				getline(levelFile, value3, ';');
-				object = new Enemy1(stoi(value2), stoi(value3), r);
+				getline(levelFile, value4, ';');
+				object = new Enemy1(stoi(value2), stoi(value3), stoi(value4), r);
 				objectList.push_back(static_cast<Enemy1*>(object));
 				getline(levelFile, value1);
 			}

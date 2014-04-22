@@ -15,7 +15,8 @@ namespace PPM
 			// Possible variables to keep track of
 			int balloons, score, lives;
 			float x_speed, y_speed;
-			bool alive, grounded, facingRight;
+			bool grounded, facingRight;
+			int alive; // 1 = alive, 0 = no balloons, -1 = dead
             Timer damageClock;
             SDL_Texture *sprite2, *sprite1, *sprite0;
 			// POLY //SDL_Texture *sprite;
@@ -23,7 +24,7 @@ namespace PPM
 		public:
 			// POLY //SDL_Rect collisionBox; // placed in public temporarily to test collision
 			Enemy1(SDL_Renderer *r);
-            Enemy1(int x, int y, SDL_Renderer *r);
+            Enemy1(int x, int y, int heliumSpheres, SDL_Renderer *r);
 			~Enemy1();
 			//void move(bool direction);
 			void move();
@@ -32,7 +33,7 @@ namespace PPM
 			//void fall();
 			//void flap();
 			virtual void update(SDL_Renderer *r);
-            virtual bool isAlive();
+            virtual int isAlive();
 	};
 }
 

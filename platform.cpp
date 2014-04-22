@@ -11,7 +11,7 @@ namespace PPM
         type = "Platform";
     }
     
-    Platform::Platform(int x, int y, std::string image_file, SDL_Renderer *r) : BaseObject(x, y, image_file, r) 
+    Platform::Platform(int x, int y, std::string image_file, SDL_Renderer *r) : BaseObject(r) 
     {
         collisionBox.x = x;
         collisionBox.y = y;

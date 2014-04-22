@@ -11,11 +11,11 @@ Levels don't create a new player instance, it sets the new starting/respawn poin
 In the future this will reset the player's location upon death or exiting to menu and restarting.
 
 # Enemy1 #
-Format: enemy1;x;y;
-Example: enemy1;550;350;
+Format: enemy1;x;y;z;
+Example: enemy1;550;350;2;
 
 Additional Notes:
-Enemies are spawned at the specified location. Additional paramaters may come later, along with alternate foes.
+Enemies are spawned at the specified location (x,y) with z balloons. Additional paramaters may come later, along with alternate foes.
 
 # Platform #
 Format: ground;x;y;
