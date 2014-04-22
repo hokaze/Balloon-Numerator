@@ -6,6 +6,7 @@
 #include "platform.h"
 #include "numberBalloon.h"
 #include "textDisplay.h"
+#include "spiky.h"
 
 namespace PPM
 {
@@ -41,6 +42,7 @@ namespace PPM
 			std::vector<Enemy1*> enemyList;
 			std::vector<Platform*> groundList;
 			std::vector<NumberBalloon*> numberList;
+            std::vector<Spiky*> spikyList;
 			LevelList(Balloonist *player, std::string filename, SDL_Renderer *r);
 			~LevelList();
 			void setLevel(int levelNo);

@@ -1,0 +1,6 @@
+player;370;345;
+textDisplay;250;10;What is three lots of six?;Roboto.ttf;white;30;
+numberBalloon;30;54;img/numberBalloon.png;18;Roboto.ttf;white;18;1;
+numberBalloon;740;494;img/numberBalloon.png;16;Roboto.ttf;white;18;0;
+numberBalloon;30;494;img/numberBalloon.png;24;Roboto.ttf;white;18;0;
+numberBalloon;740;54;img/numberBalloon.png;19;Roboto.ttf;white;18;0;

@@ -12,7 +12,7 @@ namespace PPM
 			//const int run_speed = 2, float_speed = 1;
 			//const float fall_accel = 0.1, ascend_accel = 0.05;
 			// Possible variables to keep track of
-			// POLY //int balloons, score, lives;
+			int score, lives;
 			// POLY //float x_speed, y_speed;
 			// POLY //bool alive, grounded, facingRight;
 			// POLY //SDL_Texture *sprite;

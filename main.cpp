@@ -135,7 +135,7 @@ int main(int argc, char*argv[])
         
         // Start Game
         while (MasterList.currentLevel > -1)
-        {
+        {   
 			loadNextLevel = false;
             while (SDL_PollEvent(&event))
             {
@@ -198,6 +198,13 @@ int main(int argc, char*argv[])
 							enemyCollide = checkCollision(MasterList.enemyList.at(i)->collisionBox, MasterList.groundList.at(j)->collisionBox);
 							if (enemyCollide) {MasterList.enemyList.at(i)->bounce(enemyCollide);}
 						}
+						// Enemy - Spiky collisions
+						for (unsigned int k = 0; k < MasterList.spikyList.size(); ++k)
+                        {
+                            enemyCollide = 0;
+                            enemyCollide = checkCollision(MasterList.enemyList.at(i)->collisionBox, MasterList.spikyList.at(k)->collisionBox);
+                            if (enemyCollide) {MasterList.enemyList.at(i)->pop(1);}
+                        }
 					}
 				}
             }
@@ -218,6 +225,13 @@ int main(int argc, char*argv[])
                 collide = 0;
                 collide = checkCollision(player->collisionBox, MasterList.groundList.at(j)->collisionBox);
                 if (collide) {player->bounce(collide);}
+            }
+            // Player - Spiky collisions
+            for (unsigned int k = 0; k < MasterList.spikyList.size(); ++k)
+            {
+                collide = 0;
+                collide = checkCollision(player->collisionBox, MasterList.spikyList.at(k)->collisionBox);
+                if (collide) {player->pop(1);}
             }
 
 			// IF SUB LEVEL

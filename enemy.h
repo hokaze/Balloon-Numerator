@@ -13,7 +13,7 @@ namespace PPM
 			//const int run_speed = 2, float_speed = 1;
 			//const float fall_accel = 0.1, ascend_accel = 0.05;
 			// Possible variables to keep track of
-			int balloons, score, lives;
+			int balloons;
 			float x_speed, y_speed;
 			bool grounded, facingRight;
 			int alive; // 1 = alive, 0 = no balloons, -1 = dead

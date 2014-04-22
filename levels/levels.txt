@@ -1,6 +1,6 @@
-main0.txt
-main1.txt
-sub1.txt
-main2.txt
-main3.txt
+main0.txt;
+main1.txt;
+sub1.txt;
+main2.txt;
+main3.txt;
 sub2.txt

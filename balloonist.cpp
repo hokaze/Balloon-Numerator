@@ -150,5 +150,6 @@ namespace PPM
         x_speed = 0;
         y_speed = 0;
 		balloons = 2;
+        sprite = sprite2;
     }
 }

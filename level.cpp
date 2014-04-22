@@ -40,7 +40,7 @@ namespace PPM
 		std::string value1, value2, value3, value4, value5, value6, value7, value8, value9;
 		SDL_Color colour;
 		void *object;
-		std::ifstream levelFile(fileline);
+		std::ifstream levelFile(fileline.c_str());
 		while (levelFile.good())
 		{
 			std::getline(levelFile, value1, ';');
@@ -98,6 +98,16 @@ namespace PPM
 				objectList.push_back(static_cast<TextDisplay*>(object));
 				getline(levelFile, value1);
 			}
+			else if (value1 == "spiky")
+            {
+                getline(levelFile, value2, ';');
+                getline(levelFile, value3, ';');
+                getline(levelFile, value4, ';');
+                getline(levelFile, value5, ';');
+                object = new Spiky(stoi(value2), stoi(value3), !!stoi(value4), stoi(value5), r);
+                objectList.push_back(static_cast<Spiky*>(object));
+                getline(levelFile, value1);
+            }
 			else
 			{
 				getline(levelFile, value1);
@@ -122,7 +132,7 @@ namespace PPM
 	{
 		std::string fileString, pathString;
 		std::string dirString = "levels/";
-		std::ifstream levelFile(filename);
+		std::ifstream levelFile(filename.c_str());
 		Level* newLevel = nullptr;
 		message = nullptr;
 		hero = player;
@@ -134,10 +144,11 @@ namespace PPM
 
 		while (levelFile.good())
 		{
-			getline(levelFile, fileString);
+			getline(levelFile, fileString, ';');
 			pathString = dirString + fileString;
-			newLevel = new Level(player, pathString, r);
+			newLevel = new Level(player, pathString.c_str(), r);
 			levelsContain.push_back(newLevel);
+            getline(levelFile, fileString);
 		}
 	}
 
@@ -166,6 +177,7 @@ namespace PPM
 			enemyList.clear();
 			groundList.clear();
 			numberList.clear();
+            spikyList.clear();
 			message = nullptr;
 			// Create objectlist
 			objectList = activeLevel->getObjectList();
@@ -193,6 +205,10 @@ namespace PPM
 					educationLevel = 1;
 					eduCountdown = 1;
 				}
+				else if (objectList.at(i)->getType() == "Spiky")
+                {
+                    spikyList.push_back(dynamic_cast<Spiky*>(objectList.at(i)));
+                }
 			}
 		}
 	}
