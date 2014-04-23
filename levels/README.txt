@@ -42,6 +42,14 @@ Spawns a balloon at x, y, that has a number on it. Colour, font, size follows Te
 The number is in fact a string for the font to render, but it should be restricted to integers only.
 "Correct" is a 0/1 bool, where 1 means the correct answer and 0 means an incorrect answer.
 
+# Spiky #
+Format: spiky;x;y;direction;speed;
+Example: spiky;700;300;01;
+
+Additional Notes:
+Enemy/Obstacle, cannot be beaten. Adapted from the "birds" of the mockups. A mascot of sorts, maybe?
+Flies either right or left based on the direction bool (1 = right) at a rate of speed pixels per frame.
+Not subject to gravity, screen-wraps. Harms player and enemy balloonists alike. No bouncing.
 
 ## Further Information ##
 

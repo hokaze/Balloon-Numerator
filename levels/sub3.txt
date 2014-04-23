@@ -1,0 +1,7 @@
+player;370;345;
+textDisplay;250;10;4 times 10, then halve it;Roboto.ttf;white;30;
+numberBalloon;70;74;img/numberBalloon.png;20;Roboto.ttf;white;18;1;
+numberBalloon;700;474;img/numberBalloon.png;14;Roboto.ttf;white;18;0;
+numberBalloon;70;474;img/numberBalloon.png;24;Roboto.ttf;white;18;0;
+ground;-10;580;img/platform2.png;
+ground;660;580;img/platform2.png;

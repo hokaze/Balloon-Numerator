@@ -1,6 +1,6 @@
 player;50;450;
 enemy1;600;300;1;
-ground;-50;550;img/platform1.png;
+ground;-50;580;img/platform2.png;
 ground;290;400;img/platform1.png;
 ground;440;400;img/platform1.png;
 ground;590;400;img/platform1.png;
@@ -9,4 +9,4 @@ ground;-10;50;img/platform1.png;
 ground;140;50;img/platform1.png;
 ground;290;50;img/platform1.png;
 ground;440;50;img/platform1.png;
-spiky;0;1;700;300;
+spiky;5;5;0;5;

@@ -20,13 +20,16 @@ int main(int argc, char*argv[])
     SDL_Texture *bgTex2 = loadTexture("img/sunsetBackground.png", rend);
 	SDL_Texture *loseLevelTex = loadTexture("img/lose.png", rend);
 	SDL_Texture *nextLevelTex = loadTexture("img/win.png", rend);
+	SDL_Texture *victoryTex = loadTexture("img/victory.png", rend);
+	SDL_Texture *storyTex = loadTexture("img/story.png", rend);
+	SDL_Texture *helpTex = loadTexture("img/help.png", rend);
 	
 	// Event structure for handling input and rendering until closed
 	SDL_Event event;
     
     srand(time(NULL));
 	bool running = true;
-    bool menu = true;
+    bool menu = true, popup = false, loadNextLevel = false;
     
     int collide = 0;
     int enemyCollide = 0;
@@ -36,7 +39,6 @@ int main(int argc, char*argv[])
     SDL_Texture *menuSelect = loadTexture("img/menuSelector.png", rend);
     int menuItem = 1;
     const int menuItemLast = 4;
-	bool loadNextLevel = 0;
     
 	// Create our main game objects
     Balloonist* player = new Balloonist(50, 50, rend);
@@ -78,17 +80,50 @@ int main(int argc, char*argv[])
 							MasterList.activeLevel->resetLevel();
 							MasterList.setLevel(0);
                         }
-                        // Educational level
-                        /*else if (menuItem == 2)
+                        // Help
+                        else if (menuItem == 2)
                         {
-                            menu = false;
-                            currentLevel = 2;
-                        }*/
-                        // Display high score
-                        /*else if (menuItem == 3)
+							renderTexture(helpTex, rend, 0, 0);
+							SDL_RenderPresent(rend);
+							popup = true;
+							while (popup == true)
+							{
+								while (SDL_PollEvent(&event))
+								{
+									if (event.type == SDL_QUIT)
+									{
+										menu = false; running = false; popup = false;
+										MasterList.currentLevel = -3;
+									}
+									if (event.type == SDL_KEYDOWN)
+									{
+										popup = false;
+									}
+								}
+							}
+                        }
+                        // Story
+                        else if (menuItem == 3)
                         {
-                            // high score popup?
-                        }*/
+							renderTexture(storyTex, rend, 0, 0);
+							SDL_RenderPresent(rend);
+							popup = true;
+							while (popup == true)
+							{
+								while (SDL_PollEvent(&event))
+								{
+									if (event.type == SDL_QUIT)
+									{
+										menu = false; running = false; popup = false;
+										MasterList.currentLevel = -3;
+									}
+									if (event.type == SDL_KEYDOWN)
+									{
+										popup = false;
+									}
+								}
+							}
+                        }
                         // Quit game
                         else if (menuItem == 4)
                         {
@@ -220,19 +255,22 @@ int main(int argc, char*argv[])
             SDL_RenderPresent(rend);
             
             // Player - Ground bouncing
-            for (unsigned int j = 0; j < MasterList.groundList.size(); ++j)
-            {
-                collide = 0;
-                collide = checkCollision(player->collisionBox, MasterList.groundList.at(j)->collisionBox);
-                if (collide) {player->bounce(collide);}
-            }
-            // Player - Spiky collisions
-            for (unsigned int k = 0; k < MasterList.spikyList.size(); ++k)
-            {
-                collide = 0;
-                collide = checkCollision(player->collisionBox, MasterList.spikyList.at(k)->collisionBox);
-                if (collide) {player->pop(1);}
-            }
+			if (player->isAlive() == 1)
+			{
+				for (unsigned int j = 0; j < MasterList.groundList.size(); ++j)
+				{
+					collide = 0;
+					collide = checkCollision(player->collisionBox, MasterList.groundList.at(j)->collisionBox);
+					if (collide) {player->bounce(collide);}
+				}
+				// Player - Spiky collisions
+				for (unsigned int k = 0; k < MasterList.spikyList.size(); ++k)
+				{
+					collide = 0;
+					collide = checkCollision(player->collisionBox, MasterList.spikyList.at(k)->collisionBox);
+					if (collide) {player->pop(1);}
+				}
+			}
 
 			// IF SUB LEVEL
 			if (MasterList.educationLevel == 1)
@@ -285,6 +323,12 @@ int main(int argc, char*argv[])
 				MasterList.lastLevel = MasterList.currentLevel;
 				MasterList.setLevel(-1);
 			}
+
+			if (player->isAlive() == -1)
+			{
+				MasterList.lastLevel = MasterList.currentLevel;
+				MasterList.setLevel(-2);
+			}
         }
 
 		// Between level popup/delay
@@ -298,12 +342,34 @@ int main(int argc, char*argv[])
 			if (MasterList.lastLevel + 1 >= MasterList.totalLevels())
 			{
 				MasterList.setLevel(-3);
-				menu = true; // TEMPORARY, return to menu so game doesn't crash when we run out of levels to play
+				popup = true;
+				SDL_RenderClear(rend);
+				renderTexture(victoryTex, rend, 0, 0);
+				SDL_RenderPresent(rend);
+				while (popup == true)
+				{
+					while (SDL_PollEvent(&event))
+					{
+						if (event.type == SDL_QUIT)
+						{
+							menu = false; running = false; popup = false;
+							MasterList.currentLevel = -3;
+						}
+						if (event.type == SDL_KEYDOWN)
+						{
+							popup = false;
+						}
+					}
+				}
+				menu = true; // return to menu so game doesn't crash by trying to load another level
 			}
 			else
 			{
 				MasterList.currentLevel = MasterList.lastLevel;
 				MasterList.setLevel(MasterList.lastLevel + 1);
+				// Resets level if this is second time playing this level
+				MasterList.activeLevel->resetLevel();
+				MasterList.setLevel(MasterList.currentLevel);
 			}
 		}
 
@@ -327,6 +393,8 @@ int main(int argc, char*argv[])
 	SDL_DestroyTexture(bgTex2);
 	SDL_DestroyTexture(nextLevelTex);
 	SDL_DestroyTexture(loseLevelTex);
+	SDL_DestroyTexture(victoryTex);
+	SDL_DestroyTexture(storyTex);
 	SDL_Quit();
 	
 	return 0;

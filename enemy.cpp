@@ -83,8 +83,8 @@ namespace PPM
 		if (balloons < 1) {alive = 0;} // no balloons = no collision
         
         // Cap speeds
-        if (x_speed > 4) {x_speed = 4;}
-        else if (x_speed < -4) {x_speed = -4;}
+        if (x_speed > 3) {x_speed = 3;}
+        else if (x_speed < -3) {x_speed = -3;}
         if (y_speed > 4) {y_speed = 4;}
         else if (y_speed < -4) {y_speed = -4;}
         

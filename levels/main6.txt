@@ -1,0 +1,16 @@
+player;25;25;
+enemy1;560;340;1;
+enemy1;690;460;1;
+enemy1;720;580;1;
+enemy1;100;200;2;
+enemy1;200;400;2;
+ground;-20;100;img/platform1.png;
+ground;-20;0;img/wall1.png;
+ground;-20;150;img/wall1.png;
+ground;-20;300;img/wall1.png;
+spiky;100;350;1;10;
+spiky;500;600;0;20;
+spiky;50;500;0;10;
+spiky;550;550;1;20;
+ground;-25;580;img/platform2.png;
+ground;625;580;img/platform2.png;

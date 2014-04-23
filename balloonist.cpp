@@ -111,9 +111,11 @@ namespace PPM
 			y_speed += 0.05;
 		}
 		
+		if (balloons < 1) {alive = 0;} // no balloons = no collision
+
 		// Cap speeds
-		if (x_speed > 4) {x_speed = 4;}
-		else if (x_speed < -4) {x_speed = -4;}
+		if (x_speed > 3) {x_speed = 3;}
+		else if (x_speed < -4) {x_speed = -3;}
 		if (y_speed > 4) {y_speed = 4;}
 		else if (y_speed < -4) {y_speed = -4;}
 		
@@ -127,7 +129,21 @@ namespace PPM
 		
 		// Vertical screen-bounds
 		if (collisionBox.y < 0) {collisionBox.y = 0; y_speed = 0;}
-		else if (collisionBox.y > SCREEN_HEIGHT - collisionBox.h) {collisionBox.y = SCREEN_HEIGHT - collisionBox.h; y_speed = 0;}
+		else if (collisionBox.y > SCREEN_HEIGHT - collisionBox.h)
+		{
+			if (balloons > 0)
+			{
+				collisionBox.y = SCREEN_HEIGHT - collisionBox.h;
+				y_speed = 0;
+			}
+			else
+			{
+				if (collisionBox.y > SCREEN_HEIGHT + (collisionBox.h * 2))
+				{
+					alive = -1;
+				}
+			}
+		}
 		
 		// Draw to screen
 		renderTexture(sprite, r, collisionBox.x, collisionBox.y, facingRight);
@@ -151,5 +167,7 @@ namespace PPM
         y_speed = 0;
 		balloons = 2;
         sprite = sprite2;
+		facingRight = true;
+		alive = 1;
     }
 }
